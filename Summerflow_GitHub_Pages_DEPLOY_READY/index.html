@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f2ece6" />
+  <title>Summerflow — LCD Navigation Prototype — Fixed</title>
+  <link rel="stylesheet" href="./styles.css?v=lcd-nav-v14" />
+</head>
+<body>
+  <main class="home" aria-label="Summerflow composition prototype">
+    <!-- Composition + boot check: page logo is now part of the locked central axis. -->
+    <div class="star-field" aria-hidden="true">
+      <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
+      <i class="star s04 large"></i><i class="star s05 tiny"></i><i class="star s06"></i>
+      <i class="star s07 small"></i><i class="star s08 tiny"></i><i class="star s09 large"></i>
+      <i class="star s10"></i><i class="star s11 tiny"></i><i class="star s12 small"></i>
+      <i class="star s13 tiny"></i><i class="star s14"></i><i class="star s15 large"></i>
+      <i class="star s16 small"></i><i class="star s17 tiny"></i><i class="star s18"></i>
+      <i class="star s19 tiny"></i><i class="star s20 small"></i><i class="star s21 large"></i>
+      <i class="star s22"></i><i class="star s23 tiny"></i><i class="star s24 small"></i>
+      <i class="star s25 tiny"></i><i class="star s26"></i><i class="star s27 small"></i>
+    </div>
+
+    <section class="stage" aria-label="Retro phone and interactive keyring navigation">
+      <div class="page-logo" aria-label="Summerflow">
+        <img src="./assets/logo-web/logo.png" alt="Summerflow" draggable="false" />
+      </div>
+
+      <div class="phone" aria-label="Summerflow retro candybar phone">
+        <img class="phone-frame phone-shell" src="./assets/web/phone-boot-01.png" alt="" draggable="false" />
+        <div class="lcd-screen" aria-hidden="true">
+          <img class="lcd-pixel-logo" src="./assets/logo-web/logo-pixel.png" alt="" draggable="false" />
+          <i class="lcd-scanline"></i>
+        </div>
+
+        <div class="phone-controls" aria-label="Phone logo navigation">
+          <button class="phone-hit hit-next-pad" type="button" data-action="next" aria-label="Next pixel logo"></button>
+        </div>
+      </div>
+
+      <div class="main-ring" aria-hidden="true">
+        <img src="./assets/web/main-ring.png" alt="" draggable="false" />
+      </div>
+
+      <svg class="rope-layer" aria-hidden="true">
+        <g class="rope rope-a"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
+        <g class="rope rope-b"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
+        <g class="rope rope-c"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
+        <g class="rope rope-d"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
+        <g class="rope rope-e"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
+      </svg>
+
+      <!-- Order follows the original demo fan: Camera / CD / Diary / Hanger / Envelope -->
+      <button class="charm charm-camera" type="button" data-destination="Lookbook" data-label="LOOKBOOK" aria-label="Camera, Lookbook">
+        <img src="./assets/web/camera.png" alt="" draggable="false" />
+      </button>
+      <button class="charm charm-cd" type="button" data-destination="Playlist" data-label="PLAYLIST" aria-label="CD, Playlist">
+        <img src="./assets/web/cd.png" alt="" draggable="false" />
+      </button>
+      <button class="charm charm-diary" type="button" data-destination="About / Story" data-label="STORY" aria-label="Diary, About / Story">
+        <img src="./assets/web/diary.png" alt="" draggable="false" />
+      </button>
+      <button class="charm charm-hanger" type="button" data-destination="Clothes / Closet" data-label="CLOSET" aria-label="Hanger, Clothes / Closet">
+        <img src="./assets/web/hanger.png" alt="" draggable="false" />
+      </button>
+      <button class="charm charm-envelope" type="button" data-destination="Order" data-label="ORDER" aria-label="Envelope, Order">
+        <img src="./assets/web/envelope.png" alt="" draggable="false" />
+      </button>
+    </section>
+
+    <section class="destination-view" aria-live="polite" aria-hidden="true">
+      <div class="destination-card">
+        <button class="home-button" type="button" aria-label="Back to Summerflow home">← HOME</button>
+        <p class="destination-kicker">COMPOSITION + BOOT CHECK / <span data-view-kicker>DISCOVERY</span></p>
+        <div class="destination-icon" data-view-icon aria-hidden="true">♡</div>
+        <h1 data-view-title>LOOKBOOK</h1>
+        <p class="destination-copy" data-view-copy>placeholder content</p>
+        <p class="destination-note">content comes in 03</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="./script.js?v=lcd-nav-v14"></script>
+  <script src="./phone-buttons.js?v=lcd-nav-v14"></script>
+</body>
+</html>
