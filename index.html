@@ -7,10 +7,33 @@
   <title>Summerflow — Scrapbook Side Objects Prototype</title>
   <link rel="stylesheet" href="./styles.css?v=physics-v10" />
   <link rel="stylesheet" href="./mobile-v14.css?v=mobile-bg-v14" />
+  <style id="mobile-decoration-v15">
+    @media (max-width:700px){
+      .star{opacity:.76!important;width:clamp(14px,4.8vw,24px)!important}
+      .star.small{width:clamp(11px,3.5vw,18px)!important}
+      .star.tiny{width:clamp(7px,2vw,10px)!important}
+      .star.large{width:clamp(24px,7vw,34px)!important}
+      .s01,.s03,.s05,.s07,.s10,.s20,.s23{display:block!important}
+      .s02,.s04,.s06,.s08,.s09,.s11,.s12,.s13,.s14,.s15,.s16,.s17,.s18,.s19,.s21,.s22,.s24,.s25,.s26,.s27{display:none!important}
+      .s01{left:4%!important;right:auto!important;top:150px!important;bottom:auto!important}
+      .s03{left:10%!important;right:auto!important;top:365px!important;bottom:auto!important}
+      .s05{right:10%!important;left:auto!important;top:175px!important;bottom:auto!important}
+      .s07{right:4%!important;left:auto!important;top:390px!important;bottom:auto!important}
+      .s10{right:5%!important;left:auto!important;top:585px!important;bottom:auto!important}
+      .s20{right:16%!important;left:auto!important;bottom:155px!important;top:auto!important}
+      .s23{left:12%!important;right:auto!important;bottom:145px!important;top:auto!important}
+      .scrap-poster{left:18px!important;top:198px!important;width:clamp(58px,15.5vw,67px)!important;opacity:.97!important}
+      .scrap-polpic{right:18px!important;top:226px!important;width:clamp(56px,15vw,65px)!important;opacity:.97!important}
+    }
+    @media (max-width:430px){
+      .scrap-poster{left:16px!important;top:188px!important}
+      .scrap-polpic{right:16px!important;top:214px!important}
+      .s01{top:138px!important}.s05{top:162px!important}.s03{top:345px!important}.s07{top:370px!important}.s10{top:555px!important}
+    }
+  </style>
 </head>
 <body>
   <main class="home" aria-label="Summerflow composition prototype">
-    <!-- Composition + boot check: page logo is now part of the locked central axis. -->
     <div class="star-field" aria-hidden="true">
       <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
       <i class="star s04 large"></i><i class="star s05 tiny"></i><i class="star s06"></i>
@@ -22,7 +45,6 @@
       <i class="star s22"></i><i class="star s23 tiny"></i><i class="star s24 small"></i>
       <i class="star s25 tiny"></i><i class="star s26"></i><i class="star s27 small"></i>
     </div>
-
 
     <div class="scrapbook-layer" aria-label="Summerflow scrapbook decorations">
       <button class="scrap scrap-poster" type="button" data-message="summer is a state of mind ♡" aria-label="Summer Flow poster">
@@ -72,22 +94,11 @@
         <g class="rope rope-e"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
       </svg>
 
-      <!-- Order follows the original demo fan: Camera / CD / Diary / Hanger / Envelope -->
-      <button class="charm charm-camera" type="button" data-destination="Lookbook" data-label="LOOKBOOK" aria-label="Camera, Lookbook">
-        <img src="./assets/web/camera.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-cd" type="button" data-destination="Playlist" data-label="PLAYLIST" aria-label="CD, Playlist">
-        <img src="./assets/web/cd.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-diary" type="button" data-destination="About / Story" data-label="STORY" aria-label="Diary, About / Story">
-        <img src="./assets/web/diary.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-hanger" type="button" data-destination="Clothes / Closet" data-label="CLOSET" aria-label="Hanger, Clothes / Closet">
-        <img src="./assets/web/hanger.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-envelope" type="button" data-destination="Order" data-label="ORDER" aria-label="Envelope, Order">
-        <img src="./assets/web/envelope.png" alt="" draggable="false" />
-      </button>
+      <button class="charm charm-camera" type="button" data-destination="Lookbook" data-label="LOOKBOOK" aria-label="Camera, Lookbook"><img src="./assets/web/camera.png" alt="" draggable="false" /></button>
+      <button class="charm charm-cd" type="button" data-destination="Playlist" data-label="PLAYLIST" aria-label="CD, Playlist"><img src="./assets/web/cd.png" alt="" draggable="false" /></button>
+      <button class="charm charm-diary" type="button" data-destination="About / Story" data-label="STORY" aria-label="Diary, About / Story"><img src="./assets/web/diary.png" alt="" draggable="false" /></button>
+      <button class="charm charm-hanger" type="button" data-destination="Clothes / Closet" data-label="CLOSET" aria-label="Hanger, Clothes / Closet"><img src="./assets/web/hanger.png" alt="" draggable="false" /></button>
+      <button class="charm charm-envelope" type="button" data-destination="Order" data-label="ORDER" aria-label="Envelope, Order"><img src="./assets/web/envelope.png" alt="" draggable="false" /></button>
     </section>
 
     <section class="destination-view" aria-live="polite" aria-hidden="true">
@@ -100,9 +111,7 @@
         <p class="destination-note">content comes in 03</p>
       </div>
     </section>
-    <footer class="site-footer" aria-label="Copyright">
-      <p>©2026 Summerflow. All rights reserved.</p>
-    </footer>
+    <footer class="site-footer" aria-label="Copyright"><p>©2026 Summerflow. All rights reserved.</p></footer>
   </main>
 
   <script src="./script.js?v=physics-mobile-v11"></script>
