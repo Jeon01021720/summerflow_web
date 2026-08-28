@@ -1,0 +1,72 @@
+/* Summerflow v13 — Mobile background cleanup only.
+   Scope: poster, polaroid, and background stars.
+   Do NOT modify phone body, main ring, keyrings, rope length, chain physics, or button behavior. */
+
+@media (max-width: 700px) {
+  .star {
+    opacity: .66;
+    width: clamp(14px, 4.4vw, 22px) !important;
+  }
+  .star.small { width: clamp(10px, 3vw, 16px) !important; }
+  .star.tiny { width: clamp(6px, 1.7vw, 9px) !important; }
+  .star.large { width: clamp(22px, 6.2vw, 30px) !important; }
+
+  .s02,.s03,.s04,.s05,.s06,.s08,.s10,.s11,.s12,.s13,.s14,
+  .s15,.s16,.s17,.s18,.s19,.s20,.s21,.s22,.s23,.s24,.s25,.s26,.s27 {
+    display: none !important;
+  }
+
+  .s01 {
+    display: block !important;
+    left: 5%;
+    top: 210px !important;
+  }
+  .s07 {
+    display: block !important;
+    right: 5%;
+    left: auto !important;
+    top: 420px !important;
+  }
+
+  .scrap-poster {
+    left: 24px !important;
+    top: 286px !important;
+    width: clamp(60px, 16vw, 70px) !important;
+    opacity: .95;
+  }
+
+  .scrap-polpic {
+    right: 24px !important;
+    top: 322px !important;
+    width: clamp(58px, 15.5vw, 68px) !important;
+    opacity: .95;
+  }
+
+  .scrap-postit,
+  .scrap-memo {
+    opacity: .92;
+  }
+}
+
+@media (max-width: 430px) {
+  .s01 {
+    left: 4.5%;
+    top: 196px !important;
+  }
+  .s07 {
+    right: 4.5%;
+    top: 402px !important;
+  }
+
+  .scrap-poster {
+    left: 20px !important;
+    top: 272px !important;
+    width: clamp(56px, 15vw, 64px) !important;
+  }
+
+  .scrap-polpic {
+    right: 20px !important;
+    top: 308px !important;
+    width: clamp(54px, 14.6vw, 62px) !important;
+  }
+}
