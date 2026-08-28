@@ -5,48 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f2ece6" />
   <title>Summerflow — Scrapbook Side Objects Prototype</title>
-  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v16" />
+  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v17" />
 
-  <style id="mobile-decoration-v16">
+  <style id="mobile-decoration-v17">
     @media (max-width:700px){
-      .star{opacity:.78!important;width:clamp(14px,4.9vw,24px)!important}
+      .star{opacity:.80!important;width:clamp(14px,4.9vw,24px)!important}
       .star.small{width:clamp(11px,3.6vw,18px)!important}
       .star.tiny{width:clamp(7px,2vw,10px)!important}
       .star.large{width:clamp(24px,7vw,34px)!important}
-      .s01,.s03,.s05,.s07,.s10,.s12,.s20,.s23,.s25{display:block!important}
-      .s02,.s04,.s06,.s08,.s09,.s11,.s13,.s14,.s15,.s16,.s17,.s18,.s19,.s21,.s22,.s24,.s26,.s27{display:none!important}
-      .s01{left:4%!important;right:auto!important;top:138px!important;bottom:auto!important}
-      .s03{left:9%!important;right:auto!important;top:360px!important;bottom:auto!important}
-      .s05{right:11%!important;left:auto!important;top:165px!important;bottom:auto!important}
-      .s07{right:4%!important;left:auto!important;top:392px!important;bottom:auto!important}
-      .s10{right:6%!important;left:auto!important;top:585px!important;bottom:auto!important}
-      .s12{left:16%!important;right:auto!important;top:1065px!important;bottom:auto!important}
-      .s20{right:14%!important;left:auto!important;bottom:154px!important;top:auto!important}
-      .s23{left:10%!important;right:auto!important;bottom:146px!important;top:auto!important}
-      .s25{right:8%!important;left:auto!important;bottom:330px!important;top:auto!important}
-      .scrap-poster{left:18px!important;top:158px!important;width:clamp(58px,15.5vw,67px)!important;opacity:.98!important}
-      .scrap-polpic{right:18px!important;top:208px!important;width:clamp(56px,15vw,65px)!important;opacity:.98!important}
-      .scrap-postit{left:12px!important;top:1050px!important;width:clamp(74px,19vw,92px)!important;opacity:.96!important}
-      .scrap-memo{right:10px!important;top:1056px!important;width:clamp(74px,18.5vw,88px)!important;opacity:.96!important}
+
+      .s01,.s03,.s05,.s07,.s10,.s12,.s14,.s16,.s20,.s23,.s25,.s27{display:block!important}
+      .s02,.s04,.s06,.s08,.s09,.s11,.s13,.s15,.s17,.s18,.s19,.s21,.s22,.s24,.s26{display:none!important}
+
+      .s01{left:4%!important;right:auto!important;top:132px!important;bottom:auto!important}
+      .s03{left:12%!important;right:auto!important;top:330px!important;bottom:auto!important}
+      .s05{right:11%!important;left:auto!important;top:158px!important;bottom:auto!important}
+      .s07{right:4%!important;left:auto!important;top:365px!important;bottom:auto!important}
+      .s10{right:7%!important;left:auto!important;top:520px!important;bottom:auto!important}
+      .s12{left:7%!important;right:auto!important;top:560px!important;bottom:auto!important}
+      .s14{right:13%!important;left:auto!important;top:720px!important;bottom:auto!important}
+      .s16{left:12%!important;right:auto!important;top:760px!important;bottom:auto!important}
+      .s20{right:14%!important;left:auto!important;bottom:150px!important;top:auto!important}
+      .s23{left:10%!important;right:auto!important;bottom:145px!important;top:auto!important}
+      .s25{right:8%!important;left:auto!important;bottom:315px!important;top:auto!important}
+      .s27{left:5%!important;right:auto!important;top:900px!important;bottom:auto!important}
+
+      .scrap-poster{left:18px!important;top:170px!important;width:clamp(60px,16vw,70px)!important;opacity:.98!important}
+      .scrap-polpic{right:18px!important;top:215px!important;width:clamp(58px,15.5vw,68px)!important;opacity:.98!important}
+      .scrap-postit{left:14px!important;top:650px!important;width:clamp(72px,18.5vw,88px)!important;opacity:.97!important}
+      .scrap-memo{right:12px!important;top:690px!important;width:clamp(72px,18vw,86px)!important;opacity:.97!important}
     }
+
     @media (max-width:430px){
-      .scrap-poster{left:14px!important;top:150px!important}
-      .scrap-polpic{right:14px!important;top:196px!important}
-      .scrap-postit{left:10px!important;top:990px!important;width:clamp(70px,18vw,82px)!important}
-      .scrap-memo{right:8px!important;top:998px!important;width:clamp(70px,17.5vw,80px)!important}
-      .s01{top:128px!important}
-      .s05{top:152px!important}
-      .s03{top:348px!important}
-      .s07{top:382px!important}
-      .s10{top:566px!important}
-      .s12{top:1018px!important}
-      .s25{bottom:300px!important}
+      .scrap-poster{left:14px!important;top:158px!important;width:clamp(58px,15vw,66px)!important}
+      .scrap-polpic{right:14px!important;top:202px!important;width:clamp(56px,14.8vw,64px)!important}
+      .scrap-postit{left:10px!important;top:610px!important;width:clamp(68px,17.8vw,80px)!important}
+      .scrap-memo{right:8px!important;top:650px!important;width:clamp(68px,17.5vw,80px)!important}
+
+      .s01{top:122px!important}
+      .s05{top:148px!important}
+      .s03{top:312px!important}
+      .s07{top:348px!important}
+      .s10{top:500px!important}
+      .s12{top:540px!important}
+      .s14{top:690px!important}
+      .s16{top:730px!important}
+      .s27{top:860px!important}
+      .s25{bottom:295px!important}
     }
   </style>
 </head>
 <body>
   <main class="home" aria-label="Summerflow composition prototype">
-    <!-- Composition + boot check: page logo is now part of the locked central axis. -->
     <div class="star-field" aria-hidden="true">
       <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
       <i class="star s04 large"></i><i class="star s05 tiny"></i><i class="star s06"></i>
@@ -58,7 +68,6 @@
       <i class="star s22"></i><i class="star s23 tiny"></i><i class="star s24 small"></i>
       <i class="star s25 tiny"></i><i class="star s26"></i><i class="star s27 small"></i>
     </div>
-
 
     <div class="scrapbook-layer" aria-label="Summerflow scrapbook decorations">
       <button class="scrap scrap-poster" type="button" data-message="summer is a state of mind ♡" aria-label="Summer Flow poster">
@@ -108,22 +117,11 @@
         <g class="rope rope-e"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
       </svg>
 
-      <!-- Order follows the original demo fan: Camera / CD / Diary / Hanger / Envelope -->
-      <button class="charm charm-camera" type="button" data-destination="Lookbook" data-label="LOOKBOOK" aria-label="Camera, Lookbook">
-        <img src="./assets/web/camera.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-cd" type="button" data-destination="Playlist" data-label="PLAYLIST" aria-label="CD, Playlist">
-        <img src="./assets/web/cd.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-diary" type="button" data-destination="About / Story" data-label="STORY" aria-label="Diary, About / Story">
-        <img src="./assets/web/diary.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-hanger" type="button" data-destination="Clothes / Closet" data-label="CLOSET" aria-label="Hanger, Clothes / Closet">
-        <img src="./assets/web/hanger.png" alt="" draggable="false" />
-      </button>
-      <button class="charm charm-envelope" type="button" data-destination="Order" data-label="ORDER" aria-label="Envelope, Order">
-        <img src="./assets/web/envelope.png" alt="" draggable="false" />
-      </button>
+      <button class="charm charm-camera" type="button" data-destination="Lookbook" data-label="LOOKBOOK" aria-label="Camera, Lookbook"><img src="./assets/web/camera.png" alt="" draggable="false" /></button>
+      <button class="charm charm-cd" type="button" data-destination="Playlist" data-label="PLAYLIST" aria-label="CD, Playlist"><img src="./assets/web/cd.png" alt="" draggable="false" /></button>
+      <button class="charm charm-diary" type="button" data-destination="About / Story" data-label="STORY" aria-label="Diary, About / Story"><img src="./assets/web/diary.png" alt="" draggable="false" /></button>
+      <button class="charm charm-hanger" type="button" data-destination="Clothes / Closet" data-label="CLOSET" aria-label="Hanger, Clothes / Closet"><img src="./assets/web/hanger.png" alt="" draggable="false" /></button>
+      <button class="charm charm-envelope" type="button" data-destination="Order" data-label="ORDER" aria-label="Envelope, Order"><img src="./assets/web/envelope.png" alt="" draggable="false" /></button>
     </section>
 
     <section class="destination-view" aria-live="polite" aria-hidden="true">
@@ -136,13 +134,14 @@
         <p class="destination-note">content comes in 03</p>
       </div>
     </section>
+
     <footer class="site-footer" aria-label="Copyright">
       <p>©2026 Summerflow. All rights reserved.</p>
     </footer>
   </main>
 
-  <script src="./script.js?v=mobile-patch-v16"></script>
-  <script src="./phone-buttons.js?v=mobile-patch-v16"></script>
-  <script src="./scrapbook.js?v=mobile-patch-v16"></script>
+  <script src="./script.js?v=mobile-patch-v17"></script>
+  <script src="./phone-buttons.js?v=mobile-patch-v17"></script>
+  <script src="./scrapbook.js?v=mobile-patch-v17"></script>
 </body>
 </html>
