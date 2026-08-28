@@ -4,10 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f2ece6" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Summerflow — Scrapbook Side Objects Prototype</title>
-  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v23" />
+  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v24" />
 
-  <style id="mobile-decoration-v23">
+  <style id="mobile-decoration-v24">
     @media (max-width:700px){
       .star{opacity:.82!important;width:clamp(14px,4.9vw,24px)!important}
       .star.small{width:clamp(11px,3.6vw,18px)!important}
@@ -46,7 +49,7 @@
     }
   </style>
 </head>
-<body>
+<body data-build="24">
   <main class="home" aria-label="Summerflow composition prototype">
     <div class="star-field" aria-hidden="true">
       <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
@@ -130,8 +133,24 @@
     </footer>
   </main>
 
-  <script src="./script.js?v=mobile-patch-v23"></script>
-  <script src="./phone-buttons.js?v=mobile-patch-v23"></script>
-  <script src="./scrapbook.js?v=mobile-patch-v23"></script>
+  <script>
+    (() => {
+      const current = document.body.dataset.build || '';
+      fetch(`./build-version.json?t=${Date.now()}`, { cache: 'no-store' })
+        .then((response) => response.ok ? response.json() : null)
+        .then((data) => {
+          const latest = data && String(data.version || '');
+          if (!latest || latest === current) return;
+          const url = new URL(window.location.href);
+          if (url.searchParams.get('build') === latest) return;
+          url.searchParams.set('build', latest);
+          window.location.replace(url.toString());
+        })
+        .catch(() => {});
+    })();
+  </script>
+  <script src="./script.js?v=mobile-patch-v24"></script>
+  <script src="./phone-buttons.js?v=mobile-patch-v24"></script>
+  <script src="./scrapbook.js?v=mobile-patch-v24"></script>
 </body>
 </html>
