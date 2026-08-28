@@ -1,0 +1,676 @@
+:root {
+  --bg: #f2ece6;
+  --paper: #fffdf9;
+  --ink: #5c5660;
+  --star-fill: #9c7c85;
+  --star-line: #79a8e8;
+  --logo-top: clamp(48px, 7svh, 82px);
+  --logo-w: clamp(94px, calc(var(--phone-h) * 0.20), 124px);
+  --phone-top: clamp(158px, 18svh, 208px);
+  --phone-h: clamp(500px, 58svh, 620px);
+  --ring-size: clamp(104px, 11svh, 124px);
+  --stage-min-h: max(1180px, 138svh);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; min-height: 100%; }
+body {
+  min-height: 100svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Courier New", Courier, monospace;
+}
+button { font: inherit; }
+
+.home {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  overflow: visible;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 49% 32%, rgba(255,255,255,.26), transparent 34%),
+    linear-gradient(180deg, #f4eee8 0%, #f1ebe5 100%);
+}
+.home::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .07;
+  background-image: radial-gradient(rgba(84,72,78,.45) .45px, transparent .6px);
+  background-size: 6px 6px;
+}
+
+.star-field { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.star {
+  position: absolute;
+  width: clamp(28px, 4.5vw, 64px);
+  aspect-ratio: 1;
+  display: block;
+  background: var(--star-fill);
+  clip-path: polygon(50% 0%, 61% 36%, 100% 37%, 68% 59%, 79% 100%, 50% 74%, 21% 100%, 31% 60%, 0 38%, 39% 36%);
+  filter: drop-shadow(1px 0 0 var(--star-line)) drop-shadow(-1px 0 0 var(--star-line)) drop-shadow(0 1px 0 var(--star-line)) drop-shadow(0 -1px 0 var(--star-line));
+  opacity: .96;
+}
+.star.small { width: clamp(18px, 2.8vw, 38px); }
+.star.tiny { width: clamp(8px, 1.2vw, 16px); }
+.star.large { width: clamp(62px, 9vw, 126px); }
+.s01{left:4%;top:9%;transform:rotate(-12deg)} .s02{left:15%;top:2.5%;transform:rotate(8deg)}
+.s03{left:25%;top:4%;transform:rotate(19deg)} .s04{right:4%;top:7%;transform:rotate(11deg)}
+.s05{right:25%;top:2.5%;transform:rotate(-8deg)} .s06{right:14%;top:3.5%;transform:rotate(16deg)}
+.s07{left:7%;top:27%;transform:rotate(8deg)} .s08{left:20%;top:20%;transform:rotate(-13deg)}
+.s09{right:2.5%;top:23%;transform:rotate(-7deg)} .s10{right:18%;top:29%;transform:rotate(13deg)}
+.s11{left:3%;top:40%;transform:rotate(6deg)} .s12{left:14%;top:48%;transform:rotate(20deg)}
+.s13{right:3%;top:39%;transform:rotate(-8deg)} .s14{right:10%;top:49%;transform:rotate(12deg)}
+.s15{left:4%;bottom:10%;transform:rotate(-8deg)} .s16{left:19%;bottom:18%;transform:rotate(14deg)}
+.s17{left:31%;bottom:4%;transform:rotate(-10deg)} .s18{left:43%;bottom:2%;transform:rotate(8deg)}
+.s19{right:33%;bottom:5%;transform:rotate(5deg)} .s20{right:22%;bottom:17%;transform:rotate(-14deg)}
+.s21{right:4%;bottom:11%;transform:rotate(13deg)} .s22{right:12%;bottom:28%;transform:rotate(-8deg)}
+.s23{left:8%;bottom:31%;transform:rotate(17deg)} .s24{left:25%;bottom:26%;transform:rotate(-11deg)}
+.s25{right:29%;bottom:27%;transform:rotate(19deg)} .s26{right:2%;bottom:33%;transform:rotate(-4deg)}
+.s27{left:1.8%;top:63%;transform:rotate(10deg)}
+
+.stage {
+  position: relative;
+  z-index: 3;
+  width: min(100vw, 880px);
+  min-height: var(--stage-min-h);
+  height: auto;
+  margin: 0 auto;
+  padding-bottom: 72px;
+}
+.page-logo {
+  position: absolute;
+  left: 50%;
+  top: var(--logo-top);
+  width: var(--logo-w);
+  transform: translateX(-50%);
+  z-index: 8;
+  pointer-events: none;
+  user-select: none;
+  opacity: 1;
+}
+.page-logo::before { content: none; }
+.page-logo img {
+  display:block;
+  width:100%;
+  height:auto;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,.18));
+}
+
+.phone {
+  position: absolute;
+  left: 50%;
+  top: var(--phone-top);
+  height: var(--phone-h);
+  aspect-ratio: 519 / 1216;
+  transform: translateX(-50%);
+  z-index: 4;
+  filter: drop-shadow(0 15px 17px rgba(55,48,53,.20));
+  user-select: none;
+  pointer-events: none;
+}
+.phone-frame { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
+
+/* LCD overlay is independent from the phone shell. Screen bbox measured from the blank phone asset. */
+.lcd-screen {
+  position:absolute;
+  left:16.76%;
+  top:28.04%;
+  width:65.51%;
+  height:20.15%;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  border-radius:5% 5% 6% 6% / 7% 7% 8% 8%;
+  pointer-events:none;
+  isolation:isolate;
+}
+.lcd-pixel-logo {
+  width:88%;
+  height:auto;
+  display:block;
+  opacity:0;
+  transform: scale(.94);
+  transform-origin:50% 50%;
+  clip-path: inset(49% 0 49% 0);
+  image-rendering:pixelated;
+  filter:brightness(.78) contrast(1.08);
+  will-change:transform,opacity,filter,clip-path;
+}
+.lcd-scanline {
+  position:absolute;
+  left:6%;
+  right:6%;
+  top:50%;
+  height:2px;
+  opacity:0;
+  background:rgba(45,74,50,.55);
+  box-shadow:0 0 5px rgba(45,74,50,.28);
+  transform:translateY(-50%);
+  pointer-events:none;
+}
+
+.stage.is-booted .lcd-pixel-logo {
+  animation: lcd-logo-boot 1.6s steps(12,end) forwards;
+}
+.stage.is-booted .lcd-scanline {
+  animation: lcd-scan-pulse 1.08s steps(3,end) forwards;
+}
+
+@keyframes lcd-logo-boot {
+  0%, 10%  { opacity:0; clip-path: inset(49% 0 49% 0); transform:scale(.92); filter:brightness(.72) contrast(1.12); }
+  14%      { opacity:.86; clip-path: inset(49% 0 49% 0); transform:scale(.93); }
+  22%      { opacity:1; clip-path: inset(42% 0 42% 0); transform:scale(.945); }
+  34%      { opacity:1; clip-path: inset(30% 0 30% 0); transform:scale(.96); }
+  48%      { opacity:1; clip-path: inset(17% 0 17% 0); transform:scale(.975); }
+  62%      { opacity:1; clip-path: inset(6% 0 6% 0); transform:scale(.99); }
+  72%      { opacity:1; clip-path: inset(0 0 0 0); transform:scale(1); filter:brightness(1.04) contrast(1.06); }
+  78%      { opacity:.46; }
+  84%      { opacity:1; }
+  89%      { opacity:.28; filter:brightness(.84); }
+  94%,100% { opacity:1; clip-path: inset(0 0 0 0); transform:scale(1); filter:brightness(.95) contrast(1.04); }
+}
+@keyframes lcd-scan-pulse {
+  0%,12%   { opacity:0; transform:translateY(-50%) scaleX(.14); }
+  18%      { opacity:.82; transform:translateY(-50%) scaleX(.42); }
+  44%      { opacity:.44; transform:translateY(-50%) scaleX(1); }
+  60%      { opacity:.18; transform:translateY(-50%) scaleX(1); }
+  72%,100% { opacity:0; transform:translateY(-50%) scaleX(1); }
+}
+
+.main-ring {
+  position: absolute;
+  left: calc(50% - var(--ring-size) / 2);
+  top: calc(var(--phone-top) + var(--phone-h) - 7px);
+  width: var(--ring-size);
+  aspect-ratio: 1;
+  z-index: 6;
+  --ring-x: 0px; --ring-y: 0px; --ring-rotate: 0deg;
+  transform: translate3d(var(--ring-x),var(--ring-y),0) rotate(var(--ring-rotate));
+  transition: transform .08s linear;
+  filter: drop-shadow(0 7px 6px rgba(55,50,52,.15));
+  will-change: transform;
+  pointer-events:none;
+}
+.main-ring img { width:100%; height:100%; object-fit:contain; display:block; }
+
+.rope-layer { position:absolute; inset:0; width:100%; height:100%; z-index:5; overflow:visible; pointer-events:none; }
+.rope-shadow,.rope-base,.rope-beads { fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.rope-shadow { stroke:rgba(63,58,59,.18); stroke-width:6.2; transform:translate(1.2px,1.7px); }
+.rope-base { stroke:rgba(94,91,93,.86); stroke-width:4.6; }
+.rope-beads { stroke:rgba(248,248,246,.98); stroke-width:2.2; stroke-dasharray:.7 6.2; }
+
+.charm {
+  position:absolute;
+  z-index:7;
+  appearance:none;
+  border:0;
+  padding:0;
+  margin:0;
+  background:transparent;
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  --lift-y:0px; --press-scale:1; --intro-scale:.92; --base-rotate:0deg; --physics-rotate:0deg; --collision-scale:1;
+  opacity:0;
+  transform:translate3d(0,var(--lift-y),0) rotate(calc(var(--base-rotate) + var(--physics-rotate))) scale(calc(var(--press-scale) * var(--collision-scale) * var(--intro-scale)));
+  transform-origin:50% 50%;
+  filter:drop-shadow(0 8px 6px rgba(58,50,54,.17));
+  transition:opacity .42s ease, filter .15s ease;
+  will-change:transform,left,top;
+}
+.stage.is-booted .charm { opacity:1; --intro-scale:1; }
+.stage:not(.is-booted) .charm { pointer-events:none; }
+.charm img { display:block; width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
+.charm:hover,.charm:focus-visible { --lift-y:-2px; outline:none; filter:drop-shadow(0 11px 8px rgba(58,50,54,.20)); }
+.charm.is-dragging { cursor:grabbing; --lift-y:0px; --press-scale:1.025; z-index:14; }
+.charm::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 8px);
+  transform: translate(-50%, 6px) scale(.96);
+  opacity: 0;
+  padding: 5px 9px 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(116,98,105,.18);
+  background: rgba(255,253,249,.96);
+  color: #755f66;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: .9px;
+  white-space: nowrap;
+  box-shadow: 0 8px 18px rgba(73,62,66,.10);
+  pointer-events: none;
+  transition: opacity .16s ease, transform .16s ease;
+}
+.charm:hover::after, .charm:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+.charm.is-dragging::after { opacity: 0 !important; }
+
+/* Larger assets for a scrollable poster-like layout. */
+.charm-camera   { width:128px; aspect-ratio:1240/1254; }
+.charm-cd       { width:104px; aspect-ratio:1192/1159; }
+.charm-diary    { width:102px; aspect-ratio:1127/1309; }
+.charm-hanger   { width:152px; aspect-ratio:1496/979; }
+.charm-envelope { width:124px; aspect-ratio:1216/1135; }
+
+.destination-view { position:absolute; inset:0; z-index:30; display:grid; place-items:center; padding:24px; background:rgba(242,236,230,.82); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .18s ease,visibility .18s ease; }
+.destination-view.is-open { opacity:1; visibility:visible; pointer-events:auto; }
+.destination-card { position:relative; width:min(86vw,450px); min-height:300px; padding:68px 36px 34px; border:1px solid rgba(92,86,96,.20); border-radius:24px; background:rgba(255,253,249,.95); box-shadow:0 22px 60px rgba(65,58,63,.14); text-align:center; }
+.home-button { position:absolute; left:18px; top:18px; border:1px solid rgba(92,86,96,.22); border-radius:999px; padding:7px 11px; background:var(--paper); color:var(--ink); cursor:pointer; font-size:9px; }
+.destination-kicker { margin:0 0 18px; font-size:8px; letter-spacing:1.1px; opacity:.5; }
+.destination-icon { width:62px; height:62px; margin:0 auto 16px; display:grid; place-items:center; border-radius:50%; background:#d9c1c8; color:white; font-size:24px; }
+.destination-card h1 { margin:0; font-size:clamp(27px,7vw,40px); line-height:1; }
+.destination-copy { max-width:300px; margin:14px auto 0; font-size:10px; line-height:1.5; opacity:.67; }
+.destination-note { margin:26px 0 0; font-size:7px; opacity:.36; }
+
+@media (max-width:700px) {
+  :root {
+    --logo-top: 28px;
+    --logo-w: clamp(184px, 48vw, 238px);
+    --phone-top: 142px;
+    --phone-h: clamp(410px, 54svh, 500px);
+    --ring-size: 94px;
+    --stage-min-h: max(980px, 128svh);
+  }
+  .stage { width:100vw; padding-bottom:56px; }
+  .charm-camera{width:108px}.charm-cd{width:89px}.charm-diary{width:88px}.charm-hanger{width:128px}.charm-envelope{width:106px}
+  .star.large { width:clamp(48px,16vw,72px); }
+}
+@media (max-width:430px) {
+  :root {
+    --logo-top: 26px;
+    --logo-w: clamp(174px, 50vw, 218px);
+    --phone-top: 132px;
+    --phone-h: clamp(392px, 50svh, 452px);
+    --ring-size: 88px;
+    --stage-min-h: max(930px, 122svh);
+  }
+  .charm-camera{width:102px}.charm-cd{width:84px}.charm-diary{width:83px}.charm-hanger{width:120px}.charm-envelope{width:100px}
+  .s03,.s06,.s08,.s12,.s14,.s18,.s20,.s24,.s25 { opacity:.62; }
+}
+@media (max-height:690px) and (min-width:701px) {
+  :root {
+    --logo-top: 34px;
+    --logo-w: 242px;
+    --phone-top: 158px;
+    --phone-h: 510px;
+    --ring-size: 104px;
+    --stage-min-h: 1120px;
+  }
+  .charm-camera{width:118px}.charm-cd{width:98px}.charm-diary{width:96px}.charm-hanger{width:144px}.charm-envelope{width:116px}
+}
+@media (prefers-reduced-motion:reduce) { .lcd-pixel-logo,.lcd-scanline,.charm,.destination-view{transition-duration:.01ms!important;animation:none!important} .stage.is-booted .lcd-pixel-logo{opacity:1;transform:none} }
+
+/* 02-1 LCD Navigation v10 — only left/right phone controls are interactive. */
+.phone-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+}
+.phone-hit {
+  position: absolute;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  outline: none;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* v15: use one single interaction area that matches the right navigation button only.
+   The center white area and the separate C/call button remain completely inactive.
+   Pressing anywhere inside this right pad always advances to the next logo. */
+.hit-next-pad {
+  left: 67.2%;
+  top: 61.1%;
+  width: 24.2%;
+  height: 9.1%;
+  transform: translate(-50%,-50%) rotate(-11deg);
+  border-radius: 22% 30% 28% 24% / 24% 34% 24% 26%;
+  clip-path: polygon(6% 22%, 68% 4%, 96% 18%, 92% 76%, 56% 92%, 10% 82%, 0% 48%);
+}
+.phone-hit:focus-visible { box-shadow: 0 0 0 1.5px rgba(121,168,232,.85); }
+
+/* Freeze the finished boot frame before manual logo browsing. */
+.stage.lcd-ready .lcd-pixel-logo {
+  animation: none !important;
+  opacity: 1;
+  clip-path: inset(0) !important;
+  width: 88%;
+  height: 82%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  transform: none !important;
+  filter: brightness(.95) contrast(1.04);
+}
+.stage.lcd-ready .lcd-scanline { animation: none !important; opacity: 0; }
+
+/* Short LCD refresh when changing logos. */
+.lcd-screen.logo-switch .lcd-pixel-logo {
+  animation: sf-logo-switch .22s steps(2,end) !important;
+}
+.lcd-screen.logo-switch .lcd-scanline {
+  animation: sf-logo-switch-line .20s steps(2,end) !important;
+}
+@keyframes sf-logo-switch {
+  0%   { opacity: 1; }
+  42%  { opacity: .12; }
+  55%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes sf-logo-switch-line {
+  0%   { opacity: 0; transform: translateY(-50%) scaleX(.18); }
+  35%  { opacity: .62; transform: translateY(-50%) scaleX(.82); }
+  100% { opacity: 0; transform: translateY(-50%) scaleX(1); }
+}
+
+
+/* 02-2A Scrapbook Side Objects Prototype v1
+   Decorative interaction layer intentionally kept independent from phone/keyring physics. */
+.scrapbook-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.scrap {
+  position: absolute;
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transform-origin: 50% 50%;
+  transition: transform .20s cubic-bezier(.22,.8,.24,1), filter .20s ease;
+  filter: drop-shadow(0 9px 9px rgba(75,58,65,.10));
+  z-index: 1;
+}
+.scrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.scrap:hover, .scrap:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 14px 13px rgba(75,58,65,.15));
+}
+.scrap.is-active { z-index: 4; }
+.scrap-note {
+  position: absolute;
+  left: 50%;
+  bottom: -28px;
+  transform: translate(-50%, 5px) rotate(-1deg);
+  min-width: max-content;
+  padding: 5px 9px 4px;
+  border: 1px solid rgba(123,91,104,.15);
+  border-radius: 999px;
+  background: rgba(255,252,248,.93);
+  color: #896b76;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: .35px;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 7px 18px rgba(76,58,66,.08);
+  transition: opacity .16s ease, transform .16s ease;
+}
+.scrap.is-active .scrap-note { opacity: 1; transform: translate(-50%, 0) rotate(-1deg); }
+
+/* Keep a large central safe zone for the phone, ring and charms. */
+.scrap-poster {
+  left: clamp(34px, 6.3vw, 122px);
+  top: clamp(220px, 27svh, 310px);
+  width: clamp(118px, 12.2vw, 176px);
+  transform: rotate(-4.2deg);
+}
+.scrap-poster:hover, .scrap-poster:focus-visible { transform: translateY(-4px) rotate(-2.8deg) scale(1.015); }
+.scrap-poster.is-active { transform: translateY(-5px) rotate(-2deg) scale(1.025); }
+
+.scrap-postit {
+  left: clamp(52px, 8.8vw, 158px);
+  top: clamp(610px, 70svh, 720px);
+  width: clamp(112px, 11.5vw, 166px);
+  transform: rotate(4.8deg);
+}
+.scrap-postit:hover, .scrap-postit:focus-visible { transform: translateY(-4px) rotate(2.8deg) scale(1.02); }
+.scrap-postit.is-active { transform: translateY(-6px) rotate(2deg) scale(1.03); }
+
+.scrap-polpic {
+  right: clamp(46px, 7.4vw, 136px);
+  top: clamp(250px, 31svh, 350px);
+  width: clamp(116px, 11.8vw, 170px);
+  transform: rotate(3.6deg);
+}
+.scrap-polpic:hover, .scrap-polpic:focus-visible { transform: translateY(-4px) rotate(1.7deg) scale(1.02); }
+.scrap-polpic.is-active { transform: translateY(-5px) rotate(.9deg) scale(1.03); }
+
+.scrap-memo {
+  right: clamp(36px, 6vw, 116px);
+  top: clamp(620px, 72svh, 740px);
+  width: clamp(126px, 12.6vw, 184px);
+  transform: rotate(-3.6deg);
+}
+.scrap-memo:hover, .scrap-memo:focus-visible { transform: translateY(-4px) rotate(-1.8deg) scale(1.015); }
+.scrap-memo.is-active { transform: translateY(-6px) rotate(-1deg) scale(1.025); }
+
+/* On narrower desktop widths, tuck the scraps toward the outer edges and reduce them. */
+@media (max-width: 1120px) and (min-width: 701px) {
+  .scrap-poster { left: 48px; top: 246px; width: 89px; }
+  .scrap-postit { left: 62px; top: 654px; width: 84px; }
+  .scrap-polpic { right: 50px; top: 286px; width: 84px; }
+  .scrap-memo { right: 46px; top: 664px; width: 90px; }
+}
+
+/* v2: show the scrapbook layer on mobile too, but keep every object small and outside
+   the central phone/keyring axis. Lower objects sit farther down the scrollable poster. */
+@media (max-width: 700px) {
+  .scrapbook-layer { display: block; }
+  .scrap-note { font-size: 7px; bottom: -22px; padding: 4px 7px 3px; }
+
+  .scrap-poster {
+    left: 28px;
+    top: 244px;
+    width: clamp(47px, 13.5vw, 57px);
+    transform: rotate(-4deg);
+  }
+  .scrap-polpic {
+    right: 28px;
+    top: 292px;
+    width: clamp(45px, 13.2vw, 56px);
+    transform: rotate(3deg);
+  }
+  .scrap-postit {
+    left: 32px;
+    top: 780px;
+    width: clamp(47px, 13.5vw, 57px);
+    transform: rotate(4deg);
+  }
+  .scrap-memo {
+    right: 30px;
+    top: 828px;
+    width: clamp(50px, 14.2vw, 60px);
+    transform: rotate(-3deg);
+  }
+
+  .scrap-poster:hover, .scrap-poster:focus-visible,
+  .scrap-poster.is-active { transform: translateY(-3px) rotate(-2.5deg) scale(1.03); }
+  .scrap-polpic:hover, .scrap-polpic:focus-visible,
+  .scrap-polpic.is-active { transform: translateY(-3px) rotate(1.8deg) scale(1.03); }
+  .scrap-postit:hover, .scrap-postit:focus-visible,
+  .scrap-postit.is-active { transform: translateY(-3px) rotate(2.5deg) scale(1.03); }
+  .scrap-memo:hover, .scrap-memo:focus-visible,
+  .scrap-memo.is-active { transform: translateY(-3px) rotate(-1.8deg) scale(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrap { transition-duration: .01ms !important; }
+}
+
+/* v3 visibility fix: force scrapbook objects into a clearly visible independent layer. */
+.scrapbook-layer {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 7 !important;
+  min-height: var(--stage-min-h);
+}
+.scrap {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1;
+}
+.scrap img {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Stronger first-pass desktop placement so visibility can be judged immediately. */
+@media (min-width: 1121px) {
+  .scrap-poster { left: clamp(220px, 16.8vw, 320px); top: 222px; width: clamp(113px, 10.1vw, 154px); }
+  .scrap-postit { left: clamp(248px, 18.4vw, 346px); top: 642px; width: clamp(107px, 9.4vw, 143px); }
+  .scrap-polpic { right: clamp(222px, 16.8vw, 320px); top: 264px; width: clamp(107px, 9.3vw, 141px); }
+  .scrap-memo { right: clamp(236px, 18vw, 332px); top: 650px; width: clamp(113px, 9.9vw, 150px); }
+}
+
+@media (max-width: 1120px) and (min-width: 701px) {
+  .scrap-poster { left: 102px; top: 232px; width: 96px; }
+  .scrap-postit { left: 118px; top: 636px; width: 92px; }
+  .scrap-polpic { right: 102px; top: 270px; width: 92px; }
+  .scrap-memo { right: 96px; top: 644px; width: 98px; }
+}
+
+.site-footer {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 6;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  text-align: center;
+  pointer-events: none;
+}
+.site-footer p {
+  margin: 0;
+  color: rgba(116, 96, 105, .85);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: .04em;
+  text-shadow: 0 1px 0 rgba(255,255,255,.42);
+}
+
+@media (max-width: 700px) {
+  .site-footer { bottom: 16px; }
+  .site-footer p { font-size: 10px; }
+}
+
+
+/* v9: bring scrapbook objects back slightly larger and a bit closer to the phone. */
+@media (min-width: 1121px) {
+  .scrap-poster { left: clamp(242px, 18vw, 344px) !important; top: 224px !important; width: clamp(124px, 11vw, 168px) !important; }
+  .scrap-postit { left: clamp(272px, 19.8vw, 372px) !important; top: 644px !important; width: clamp(118px, 10.3vw, 156px) !important; }
+  .scrap-polpic { right: clamp(244px, 18vw, 344px) !important; top: 266px !important; width: clamp(118px, 10.2vw, 154px) !important; }
+  .scrap-memo { right: clamp(258px, 19.2vw, 356px) !important; top: 652px !important; width: clamp(125px, 10.8vw, 164px) !important; }
+}
+
+@media (max-width: 1120px) and (min-width: 701px) {
+  .scrap-poster { left: 118px !important; top: 234px !important; width: 106px !important; }
+  .scrap-postit { left: 136px !important; top: 638px !important; width: 102px !important; }
+  .scrap-polpic { right: 118px !important; top: 272px !important; width: 102px !important; }
+  .scrap-memo { right: 112px !important; top: 646px !important; width: 108px !important; }
+}
+
+@media (max-width: 700px) {
+  .scrap-poster { left: 34px !important; top: 246px !important; width: clamp(53px, 15vw, 64px) !important; }
+  .scrap-polpic { right: 34px !important; top: 294px !important; width: clamp(51px, 14.6vw, 62px) !important; }
+  .scrap-postit { left: 38px !important; top: 784px !important; width: clamp(53px, 15vw, 64px) !important; }
+  .scrap-memo { right: 36px !important; top: 832px !important; width: clamp(56px, 15.8vw, 68px) !important; }
+}
+
+
+/* v11 — Mobile composition optimization only. Desktop remains unchanged. */
+@media (max-width: 700px) {
+  :root {
+    --logo-top: 34px;
+    --logo-w: clamp(108px, 29vw, 126px);
+    --phone-top: 122px;
+    --phone-h: clamp(410px, 54svh, 500px);
+    --ring-size: 92px;
+    --stage-min-h: max(980px, 128svh);
+  }
+
+  .page-logo { z-index: 10; }
+
+  /* Reduce decorative density and reserve the central corridor for the hero phone/keyring. */
+  .star { width: clamp(20px, 6vw, 30px); opacity: .82; }
+  .star.small { width: clamp(14px, 4.2vw, 21px); }
+  .star.tiny { width: clamp(7px, 2vw, 10px); }
+  .star.large { width: clamp(34px, 10vw, 48px); }
+
+  .s02,.s03,.s05,.s06,.s08,.s10,.s12,.s14,.s16,.s17,.s18,.s19,.s20,.s24,.s25 { display:none; }
+
+  .s01 { left: 5%; top: 82px; }
+  .s04 { right: 4%; top: 92px; }
+  .s07 { left: 3%; top: 260px; }
+  .s09 { right: 2%; top: 286px; }
+  .s11 { left: 5%; top: 470px; }
+  .s13 { right: 4%; top: 500px; }
+  .s15 { left: 3%; bottom: 135px; }
+  .s21 { right: 3%; bottom: 126px; }
+  .s22 { right: 7%; bottom: 318px; }
+  .s23 { left: 6%; bottom: 300px; }
+  .s26 { right: 2%; bottom: 430px; }
+  .s27 { left: 2%; top: 650px; }
+
+  /* Keep side scrapbook pieces secondary on small screens. */
+  .scrap-poster { left: 18px !important; top: 238px !important; width: clamp(48px, 13vw, 56px) !important; }
+  .scrap-polpic { right: 18px !important; top: 282px !important; width: clamp(46px, 12.6vw, 54px) !important; }
+  .scrap-postit { left: 20px !important; top: 778px !important; width: clamp(48px, 13vw, 56px) !important; }
+  .scrap-memo { right: 18px !important; top: 824px !important; width: clamp(50px, 13.8vw, 59px) !important; }
+}
+
+@media (max-width: 430px) {
+  :root {
+    --logo-top: 30px;
+    --logo-w: clamp(102px, 28vw, 116px);
+    --phone-top: 114px;
+    --phone-h: clamp(392px, 50svh, 452px);
+    --ring-size: 86px;
+    --stage-min-h: max(930px, 122svh);
+  }
+
+  .star { opacity: .76; }
+  .s07 { top: 242px; }
+  .s09 { top: 266px; }
+  .s11 { top: 442px; }
+  .s13 { top: 468px; }
+}
