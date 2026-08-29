@@ -8,9 +8,9 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Summerflow — Scrapbook Side Objects Prototype</title>
-  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v26" />
+  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v27" />
 
-  <style id="mobile-decoration-v26">
+  <style id="mobile-decoration-v27">
     @media (max-width:700px){
       .star{opacity:.82!important;width:clamp(14px,4.9vw,24px)!important}
       .star.small{width:clamp(11px,3.6vw,18px)!important}
@@ -49,7 +49,7 @@
     }
   </style>
 </head>
-<body data-build="26">
+<body data-build="27">
   <main class="home" aria-label="Summerflow composition prototype">
     <div class="star-field" aria-hidden="true">
       <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
@@ -136,21 +136,32 @@
   <script>
     (() => {
       const current = document.body.dataset.build || '';
+      const refreshKey = 'summerflow-refresh-attempts';
       fetch(`./build-version.json?t=${Date.now()}`, { cache: 'no-store' })
         .then((response) => response.ok ? response.json() : null)
         .then((data) => {
           const latest = data && String(data.version || '');
-          if (!latest || latest === current) return;
+          if (!latest) return;
+
+          if (latest === current) {
+            sessionStorage.removeItem(refreshKey);
+            return;
+          }
+
+          const attempts = Number(sessionStorage.getItem(refreshKey) || '0');
+          if (attempts >= 3) return;
+          sessionStorage.setItem(refreshKey, String(attempts + 1));
+
           const url = new URL(window.location.href);
-          if (url.searchParams.get('build') === latest) return;
           url.searchParams.set('build', latest);
+          url.searchParams.set('_refresh', String(Date.now()));
           window.location.replace(url.toString());
         })
         .catch(() => {});
     })();
   </script>
-  <script src="./script.js?v=mobile-patch-v26"></script>
-  <script src="./phone-buttons.js?v=mobile-patch-v26"></script>
-  <script src="./scrapbook.js?v=mobile-patch-v26"></script>
+  <script src="./script.js?v=mobile-patch-v27"></script>
+  <script src="./phone-buttons.js?v=mobile-patch-v27"></script>
+  <script src="./scrapbook.js?v=mobile-patch-v27"></script>
 </body>
 </html>
