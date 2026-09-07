@@ -1,0 +1,17 @@
+/* Summerflow 03 — Camera -> Lookbook transition prototype */
+body.sf-camera-transition-active { overflow: hidden; }
+.sf-camera-transition-backdrop{position:fixed;inset:0;z-index:9990;pointer-events:none;opacity:0;background:rgba(242,236,230,.72);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);transition:opacity 280ms ease,backdrop-filter 480ms ease,-webkit-backdrop-filter 480ms ease}
+.sf-camera-transition-backdrop.is-visible{opacity:1;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.sf-camera-transition-shell{position:fixed;z-index:9992;margin:0;padding:0;pointer-events:none;transform-style:preserve-3d;perspective:1200px;will-change:left,top,width,height,opacity}
+.sf-camera-transition-flipper{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:50% 50%;will-change:transform}
+.sf-camera-transition-image{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 20px 28px rgba(35,28,18,.18))}
+.sf-camera-transition-lcd{position:absolute;left:18.05%;top:35.60%;width:63.55%;height:40.15%;z-index:2;overflow:hidden;opacity:0;border-radius:4.5%;background:#17191d;transform:translateZ(2px) scale(.985);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);transition:opacity 260ms ease,transform 420ms cubic-bezier(.2,.8,.2,1)}
+.sf-camera-transition-shell.is-back .sf-camera-transition-lcd.is-on{opacity:1;transform:translateZ(2px) scale(1)}
+.sf-camera-transition-lcd::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.022) 0,rgba(255,255,255,.022) 1px,rgba(0,0,0,.03) 1px,rgba(0,0,0,.03) 3px);mix-blend-mode:screen}
+.sf-camera-transition-lcd::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.22;background:linear-gradient(125deg,rgba(255,255,255,.28),transparent 24%,transparent 72%,rgba(255,255,255,.08))}
+.sf-camera-transition-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 260ms ease}.sf-camera-transition-photo.is-loaded{opacity:1}
+.sf-camera-transition-placeholder{position:absolute;inset:0;display:grid;place-items:center;padding:8%;text-align:center;color:rgba(242,238,222,.92);background:radial-gradient(circle at 72% 28%,rgba(247,221,138,.14),transparent 28%),linear-gradient(145deg,#24262b,#121316 68%);font-family:"Courier New",monospace;letter-spacing:.13em;line-height:1.45}
+.sf-camera-transition-placeholder strong{display:block;margin-bottom:.35em;font-size:clamp(10px,2.2vw,18px);font-weight:700}.sf-camera-transition-placeholder span{display:block;font-size:clamp(7px,1.4vw,11px);opacity:.62}
+.sf-camera-lcd-flight{position:fixed;z-index:9994;overflow:hidden;pointer-events:none;background:#17191d;border-radius:16px;opacity:1;will-change:left,top,width,height,border-radius,opacity}.sf-camera-lcd-flight-inner{position:absolute;inset:0;display:grid;place-items:center;color:#f2eede;background:radial-gradient(circle at 68% 28%,rgba(247,221,138,.18),transparent 30%),linear-gradient(145deg,#24262b,#121316 68%);font-family:"Courier New",monospace;font-size:clamp(13px,2.1vw,22px);letter-spacing:.15em;text-align:center}
+.sf-camera-transition-active .charm-camera{opacity:0!important}.sf-camera-transition-active .rope-a{opacity:0!important}
+@media (prefers-reduced-motion:reduce){.sf-camera-transition-backdrop,.sf-camera-transition-lcd{transition:none!important}}
