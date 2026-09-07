@@ -1,0 +1,336 @@
+(() => {
+  const camera = document.querySelector('.charm-camera');
+  if (!camera || camera.dataset.sfCameraTransitionReady === '1') return;
+  camera.dataset.sfCameraTransitionReady = '1';
+
+  const FRONT_SRC = camera.querySelector('img')?.getAttribute('src') || './assets/web/camera.png';
+  const BACK_SRC = './assets/web/SF_polaroid_rotate_v2.webp';
+  const CLICK_THRESHOLD = 7;
+  const SLIDES = [
+    { label: 'MODEL SHOT 01', note: 'PHOTO SLOT / LOOKBOOK 03', tone: 'one' },
+    { label: 'MODEL SHOT 02', note: 'PHOTO SLOT / LOOKBOOK 03', tone: 'two' },
+    { label: 'MODEL SHOT 03', note: 'PHOTO SLOT / LOOKBOOK 03', tone: 'three' },
+    { label: 'MODEL SHOT 04', note: 'PHOTO SLOT / LOOKBOOK 03', tone: 'four' },
+    { label: 'MODEL SHOT 05', note: 'PHOTO SLOT / LOOKBOOK 03', tone: 'five' },
+  ];
+
+  let pointerStart = null;
+  let running = false;
+  let galleryOpen = false;
+  let galleryCleanup = null;
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  function rotationFromTransform(transform) {
+    if (!transform || transform === 'none') return 0;
+    const match = transform.match(/^matrix\(([^)]+)\)$/);
+    if (!match) return 0;
+    const parts = match[1].split(',').map(Number);
+    if (parts.length < 2 || parts.some(Number.isNaN)) return 0;
+    return Math.atan2(parts[1], parts[0]) * 180 / Math.PI;
+  }
+
+  function closeExistingDestinationImmediately() {
+    const view = document.querySelector('.destination-view');
+    if (!view) return;
+    view.classList.remove('is-open');
+    view.setAttribute('aria-hidden', 'true');
+  }
+
+  function targetBox() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const size = Math.min(w * (w <= 700 ? 0.94 : 0.72), h * (w <= 700 ? 0.62 : 0.76), 720);
+    const finalSize = Math.max(250, size);
+    return { width: finalSize, height: finalSize, left: (w - finalSize) / 2, top: (h - finalSize) / 2 };
+  }
+
+  function galleryTargetBox() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const marginX = w <= 700 ? 10 : Math.max(28, w * 0.055);
+    const marginY = w <= 700 ? 16 : Math.max(28, h * 0.055);
+    const width = Math.min(w - marginX * 2, 1040);
+    const height = Math.min(h - marginY * 2, w <= 700 ? h * 0.88 : 780);
+    return { left: (w - width) / 2, top: (h - height) / 2, width, height };
+  }
+
+  function buildTransition(rect) {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'sf-camera-transition-backdrop';
+    const shell = document.createElement('div');
+    shell.className = 'sf-camera-transition-shell';
+    Object.assign(shell.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` });
+    const flipper = document.createElement('div');
+    flipper.className = 'sf-camera-transition-flipper';
+    const img = document.createElement('img');
+    img.className = 'sf-camera-transition-image';
+    img.alt = '';
+    img.draggable = false;
+    img.src = FRONT_SRC;
+    const lcd = document.createElement('div');
+    lcd.className = 'sf-camera-transition-lcd';
+    const placeholder = document.createElement('div');
+    placeholder.className = 'sf-camera-transition-placeholder sf-camera-transition-placeholder--preview';
+    placeholder.innerHTML = '<div><strong>LOOKBOOK</strong><span>SWIPE TO BROWSE</span></div>';
+    lcd.append(placeholder);
+    flipper.append(img, lcd);
+    shell.append(flipper);
+    document.body.append(backdrop, shell);
+    return { backdrop, shell, flipper, img, lcd };
+  }
+
+  function makeSlide(slide, index) {
+    const item = document.createElement('article');
+    item.className = `sf-lookbook-slide tone-${slide.tone}`;
+    item.setAttribute('aria-label', `${index + 1} of ${SLIDES.length}: ${slide.label}`);
+    if (slide.src) {
+      const image = document.createElement('img');
+      image.src = slide.src;
+      image.alt = slide.alt || slide.label;
+      image.draggable = false;
+      item.append(image);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'sf-lookbook-slide-placeholder';
+      placeholder.innerHTML = `<span class="sf-lookbook-slide-number">0${index + 1}</span><strong>${slide.label}</strong><small>${slide.note}</small>`;
+      item.append(placeholder);
+    }
+    return item;
+  }
+
+  function buildGallery(startRect, backdrop) {
+    const gallery = document.createElement('section');
+    gallery.className = 'sf-lookbook-gallery';
+    gallery.setAttribute('role', 'dialog');
+    gallery.setAttribute('aria-modal', 'true');
+    gallery.setAttribute('aria-label', 'Summerflow Lookbook gallery');
+    Object.assign(gallery.style, { left: `${startRect.left}px`, top: `${startRect.top}px`, width: `${startRect.width}px`, height: `${startRect.height}px` });
+
+    const toolbar = document.createElement('header');
+    toolbar.className = 'sf-lookbook-toolbar';
+    const home = document.createElement('button');
+    home.type = 'button';
+    home.className = 'sf-lookbook-home';
+    home.textContent = '← HOME';
+    home.setAttribute('aria-label', 'Back to Summerflow home');
+    const title = document.createElement('div');
+    title.className = 'sf-lookbook-title';
+    title.innerHTML = '<strong>LOOKBOOK</strong><span>CAMERA ROLL</span>';
+    const counter = document.createElement('div');
+    counter.className = 'sf-lookbook-counter';
+    counter.setAttribute('aria-live', 'polite');
+    toolbar.append(home, title, counter);
+
+    const viewport = document.createElement('div');
+    viewport.className = 'sf-lookbook-viewport';
+    viewport.tabIndex = 0;
+    viewport.setAttribute('aria-label', 'Swipe left or right to browse photos');
+    const track = document.createElement('div');
+    track.className = 'sf-lookbook-track';
+    SLIDES.forEach((slide, index) => track.append(makeSlide(slide, index)));
+    viewport.append(track);
+
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'sf-lookbook-nav sf-lookbook-prev';
+    prev.innerHTML = '<span aria-hidden="true">‹</span>';
+    prev.setAttribute('aria-label', 'Previous photo');
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'sf-lookbook-nav sf-lookbook-next';
+    next.innerHTML = '<span aria-hidden="true">›</span>';
+    next.setAttribute('aria-label', 'Next photo');
+    const hint = document.createElement('div');
+    hint.className = 'sf-lookbook-hint';
+    hint.textContent = 'SWIPE / DRAG';
+    gallery.append(toolbar, viewport, prev, next, hint);
+    document.body.append(gallery);
+
+    let index = 0;
+    let dragging = false;
+    let dragId = null;
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let horizontal = false;
+    let closing = false;
+
+    function updateCounter() {
+      counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(SLIDES.length).padStart(2, '0')}`;
+      prev.disabled = index === 0;
+      next.disabled = index === SLIDES.length - 1;
+    }
+
+    function setTrackPosition(dx = 0, animate = true) {
+      track.style.transition = animate ? 'transform 420ms cubic-bezier(.2,.78,.2,1)' : 'none';
+      track.style.transform = `translate3d(calc(${-index * 100}% + ${dx}px),0,0)`;
+    }
+
+    function goTo(nextIndex) {
+      index = Math.max(0, Math.min(SLIDES.length - 1, nextIndex));
+      setTrackPosition(0, true);
+      updateCounter();
+    }
+
+    function onPointerDown(event) {
+      if (event.button !== undefined && event.button !== 0) return;
+      dragging = true;
+      dragId = event.pointerId;
+      startX = lastX = event.clientX;
+      startY = event.clientY;
+      horizontal = false;
+      viewport.classList.add('is-dragging');
+      viewport.setPointerCapture?.(event.pointerId);
+    }
+
+    function onPointerMove(event) {
+      if (!dragging || event.pointerId !== dragId) return;
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      if (!horizontal && Math.abs(dx) > 6) horizontal = Math.abs(dx) > Math.abs(dy);
+      if (!horizontal) return;
+      event.preventDefault();
+      lastX = event.clientX;
+      const edgeResistance = (index === 0 && dx > 0) || (index === SLIDES.length - 1 && dx < 0) ? 0.28 : 1;
+      setTrackPosition(dx * edgeResistance, false);
+    }
+
+    function finishDrag(event) {
+      if (!dragging || event.pointerId !== dragId) return;
+      dragging = false;
+      viewport.classList.remove('is-dragging');
+      if (viewport.hasPointerCapture?.(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
+      const dx = lastX - startX;
+      const threshold = Math.min(86, viewport.clientWidth * 0.16);
+      if (horizontal && dx < -threshold) goTo(index + 1);
+      else if (horizontal && dx > threshold) goTo(index - 1);
+      else setTrackPosition(0, true);
+      dragId = null;
+    }
+
+    async function closeGallery() {
+      if (closing) return;
+      closing = true;
+      gallery.classList.remove('is-ready');
+      backdrop.classList.remove('is-gallery');
+      const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      if (!reduced) {
+        await gallery.animate([{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(.985)' }], { duration: 220, easing: 'ease-out', fill: 'forwards' }).finished.catch(() => {});
+      }
+      gallery.remove();
+      backdrop.classList.remove('is-visible');
+      await sleep(reduced ? 1 : 170);
+      backdrop.remove();
+      document.body.classList.remove('sf-camera-transition-active', 'sf-lookbook-gallery-open');
+      galleryOpen = false;
+      running = false;
+      galleryCleanup?.();
+      galleryCleanup = null;
+      camera.focus({ preventScroll: true });
+    }
+
+    function onKeyDown(event) {
+      if (!galleryOpen) return;
+      if (event.key === 'ArrowLeft') { event.preventDefault(); goTo(index - 1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); goTo(index + 1); }
+      if (event.key === 'Escape') { event.preventDefault(); closeGallery(); }
+    }
+
+    prev.addEventListener('click', () => goTo(index - 1));
+    next.addEventListener('click', () => goTo(index + 1));
+    home.addEventListener('click', closeGallery);
+    viewport.addEventListener('pointerdown', onPointerDown);
+    viewport.addEventListener('pointermove', onPointerMove, { passive: false });
+    viewport.addEventListener('pointerup', finishDrag);
+    viewport.addEventListener('pointercancel', finishDrag);
+    document.addEventListener('keydown', onKeyDown);
+    galleryCleanup = () => document.removeEventListener('keydown', onKeyDown);
+    updateCounter();
+    setTrackPosition(0, false);
+    return { gallery, viewport };
+  }
+
+  async function playTransition() {
+    if (running || galleryOpen) return;
+    running = true;
+    closeExistingDestinationImmediately();
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const rect = camera.getBoundingClientRect();
+    const currentRotation = rotationFromTransform(getComputedStyle(camera).transform);
+    const target = targetBox();
+    const ui = buildTransition(rect);
+    document.body.classList.add('sf-camera-transition-active');
+    requestAnimationFrame(() => ui.backdrop.classList.add('is-visible'));
+
+    try {
+      if (reduced) {
+        Object.assign(ui.shell.style, { left: `${target.left}px`, top: `${target.top}px`, width: `${target.width}px`, height: `${target.height}px` });
+        ui.img.src = BACK_SRC;
+        ui.shell.classList.add('is-back');
+        ui.lcd.classList.add('is-on');
+        await sleep(300);
+      } else {
+        const move = ui.shell.animate([{ left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` }, { left: `${target.left}px`, top: `${target.top}px`, width: `${target.width}px`, height: `${target.height}px` }], { duration: 560, easing: 'cubic-bezier(.16,.84,.2,1)', fill: 'forwards' });
+        const settle = ui.flipper.animate([{ transform: `rotateZ(${currentRotation}deg) rotateY(0deg)` }, { transform: 'rotateZ(0deg) rotateY(0deg)' }], { duration: 560, easing: 'cubic-bezier(.16,.84,.2,1)', fill: 'forwards' });
+        await Promise.all([move.finished, settle.finished]);
+        await ui.flipper.animate([{ transform: 'rotateZ(0deg) rotateY(0deg)' }, { transform: 'rotateZ(-1deg) rotateY(90deg)' }], { duration: 210, easing: 'cubic-bezier(.55,.05,.72,.34)', fill: 'forwards' }).finished;
+        ui.img.src = BACK_SRC;
+        ui.shell.classList.add('is-back');
+        ui.flipper.style.transform = 'rotateZ(1deg) rotateY(-90deg)';
+        await ui.flipper.animate([{ transform: 'rotateZ(1deg) rotateY(-90deg)' }, { transform: 'rotateZ(0deg) rotateY(0deg)' }], { duration: 270, easing: 'cubic-bezier(.18,.76,.22,1)', fill: 'forwards' }).finished;
+        await sleep(120);
+        ui.lcd.classList.add('is-on');
+        await sleep(520);
+      }
+
+      const lcdRect = ui.lcd.getBoundingClientRect();
+      const galleryUi = buildGallery(lcdRect, ui.backdrop);
+      const galleryTarget = galleryTargetBox();
+      document.body.classList.add('sf-lookbook-gallery-open');
+      ui.backdrop.classList.add('is-gallery');
+
+      if (reduced) {
+        Object.assign(galleryUi.gallery.style, { left: `${galleryTarget.left}px`, top: `${galleryTarget.top}px`, width: `${galleryTarget.width}px`, height: `${galleryTarget.height}px` });
+      } else {
+        await Promise.all([
+          galleryUi.gallery.animate([{ left: `${lcdRect.left}px`, top: `${lcdRect.top}px`, width: `${lcdRect.width}px`, height: `${lcdRect.height}px`, borderRadius: '10px' }, { left: `${galleryTarget.left}px`, top: `${galleryTarget.top}px`, width: `${galleryTarget.width}px`, height: `${galleryTarget.height}px`, borderRadius: '22px' }], { duration: 620, easing: 'cubic-bezier(.16,.84,.2,1)', fill: 'forwards' }).finished,
+          ui.shell.animate([{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'scale(1.035)' }], { duration: 440, delay: 80, easing: 'ease-out', fill: 'forwards' }).finished,
+        ]);
+      }
+
+      ui.shell.remove();
+      galleryOpen = true;
+      running = false;
+      galleryUi.gallery.classList.add('is-ready');
+      galleryUi.viewport.focus({ preventScroll: true });
+    } catch (error) {
+      console.warn('[Summerflow] camera lookbook transition fallback', error);
+      ui.shell.remove();
+      ui.backdrop.classList.remove('is-visible');
+      await sleep(reduced ? 1 : 150);
+      ui.backdrop.remove();
+      document.body.classList.remove('sf-camera-transition-active', 'sf-lookbook-gallery-open');
+      running = false;
+      galleryOpen = false;
+    }
+  }
+
+  camera.addEventListener('pointerdown', (event) => {
+    if (!running && !galleryOpen) pointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  });
+  camera.addEventListener('pointerup', (event) => {
+    if (running || galleryOpen || !pointerStart || pointerStart.id !== event.pointerId) return;
+    const distance = Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y);
+    pointerStart = null;
+    if (distance > CLICK_THRESHOLD) return;
+    closeExistingDestinationImmediately();
+    playTransition();
+  });
+  camera.addEventListener('pointercancel', () => { pointerStart = null; });
+  camera.addEventListener('click', (event) => {
+    if (!running && !galleryOpen && event.detail === 0) {
+      closeExistingDestinationImmediately();
+      playTransition();
+    }
+  });
+})();
