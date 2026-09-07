@@ -40,12 +40,12 @@
   if (document.querySelector('link[data-sf-camera-transition]')) return;
   const style = document.createElement('link');
   style.rel = 'stylesheet';
-  style.href = './camera-transition.css?v=camera-transition-v1';
+  style.href = './camera-transition.css?v=camera-transition-v2';
   style.dataset.sfCameraTransition = '1';
   document.head.append(style);
 
   const script = document.createElement('script');
-  script.src = './camera-transition.js?v=camera-transition-v1';
+  script.src = './camera-transition.js?v=camera-transition-v2';
   script.defer = true;
   script.dataset.sfCameraTransition = '1';
   document.body.append(script);
