@@ -8,19 +8,17 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Summerflow — Scrapbook Side Objects Prototype</title>
-  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v28" />
-  <link rel="stylesheet" href="./camera-transition.css?v=camera-transition-v3" />
+  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v29" />
+  <link rel="stylesheet" href="./camera-transition.css?v=camera-transition-v4" />
 
-  <style id="mobile-decoration-v28">
+  <style id="mobile-decoration-v29">
     @media (max-width:700px){
       .star{opacity:.82!important;width:clamp(14px,4.9vw,24px)!important}
       .star.small{width:clamp(11px,3.6vw,18px)!important}
       .star.tiny{width:clamp(7px,2vw,10px)!important}
       .star.large{width:clamp(24px,7vw,34px)!important}
-
       .s01,.s03,.s05,.s07,.s10,.s12,.s14,.s16,.s18,.s20,.s23,.s25,.s26,.s27{display:block!important}
       .s02,.s04,.s06,.s08,.s09,.s11,.s13,.s15,.s17,.s19,.s21,.s22,.s24{display:none!important}
-
       .s01{left:4%!important;right:auto!important;top:12svh!important;bottom:auto!important}
       .s03{left:11%!important;right:auto!important;top:30svh!important;bottom:auto!important}
       .s05{right:11%!important;left:auto!important;top:15svh!important;bottom:auto!important}
@@ -35,13 +33,11 @@
       .s25{right:8%!important;left:auto!important;top:82svh!important;bottom:auto!important}
       .s26{right:3%!important;left:auto!important;top:72svh!important;bottom:auto!important}
       .s27{left:5%!important;right:auto!important;top:72svh!important;bottom:auto!important}
-
       .scrap-poster{left:6vw!important;right:auto!important;top:150px!important;bottom:auto!important;width:clamp(60px,16vw,70px)!important;opacity:.98!important}
       .scrap-polpic{right:6vw!important;left:auto!important;top:190px!important;bottom:auto!important;width:clamp(58px,15.5vw,68px)!important;opacity:.98!important}
       .scrap-postit{left:5vw!important;right:auto!important;top:380px!important;bottom:auto!important;width:clamp(72px,18.5vw,88px)!important;opacity:.97!important}
       .scrap-memo{right:5vw!important;left:auto!important;top:410px!important;bottom:auto!important;width:clamp(72px,18vw,86px)!important;opacity:.97!important}
     }
-
     @media (max-width:430px){
       .scrap-poster{top:142px!important}
       .scrap-polpic{top:182px!important}
@@ -50,7 +46,7 @@
     }
   </style>
 </head>
-<body data-build="28">
+<body data-build="29">
   <main class="home" aria-label="Summerflow composition prototype">
     <div class="star-field" aria-hidden="true">
       <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
@@ -63,107 +59,30 @@
       <i class="star s22"></i><i class="star s23 tiny"></i><i class="star s24 small"></i>
       <i class="star s25 tiny"></i><i class="star s26"></i><i class="star s27 small"></i>
     </div>
-
     <div class="scrapbook-layer" aria-label="Summerflow scrapbook decorations">
-      <button class="scrap scrap-poster" type="button" data-message="summer is a state of mind ♡" aria-label="Summer Flow poster">
-        <img src="./assets/scrapbook/SF_poster.png" alt="" draggable="false" />
-        <span class="scrap-note" aria-hidden="true">summer is a state of mind ♡</span>
-      </button>
-      <button class="scrap scrap-postit" type="button" data-message="just let it flow" aria-label="Heart memo">
-        <img src="./assets/scrapbook/SF_Postit.png" alt="" draggable="false" />
-        <span class="scrap-note" aria-hidden="true">just let it flow</span>
-      </button>
-      <button class="scrap scrap-polpic" type="button" data-message="tiny summer memory" aria-label="Heart polaroid">
-        <img src="./assets/scrapbook/SF_Polpic.png" alt="" draggable="false" />
-        <span class="scrap-note" aria-hidden="true">tiny summer memory</span>
-      </button>
-      <button class="scrap scrap-memo" type="button" data-message="today: good music + iced latte" aria-label="Today memo">
-        <img src="./assets/scrapbook/SF_Memo.png" alt="" draggable="false" />
-        <span class="scrap-note" aria-hidden="true">good music + iced latte</span>
-      </button>
+      <button class="scrap scrap-poster" type="button" data-message="summer is a state of mind ♡" aria-label="Summer Flow poster"><img src="./assets/scrapbook/SF_poster.png" alt="" draggable="false" /><span class="scrap-note" aria-hidden="true">summer is a state of mind ♡</span></button>
+      <button class="scrap scrap-postit" type="button" data-message="just let it flow" aria-label="Heart memo"><img src="./assets/scrapbook/SF_Postit.png" alt="" draggable="false" /><span class="scrap-note" aria-hidden="true">just let it flow</span></button>
+      <button class="scrap scrap-polpic" type="button" data-message="tiny summer memory" aria-label="Heart polaroid"><img src="./assets/scrapbook/SF_Polpic.png" alt="" draggable="false" /><span class="scrap-note" aria-hidden="true">tiny summer memory</span></button>
+      <button class="scrap scrap-memo" type="button" data-message="today: good music + iced latte" aria-label="Today memo"><img src="./assets/scrapbook/SF_Memo.png" alt="" draggable="false" /><span class="scrap-note" aria-hidden="true">good music + iced latte</span></button>
     </div>
-
     <section class="stage" aria-label="Retro phone and interactive keyring navigation">
-      <div class="page-logo" aria-label="Summerflow">
-        <img src="./assets/logo-web/logo.png" alt="Summerflow" draggable="false" />
-      </div>
-
-      <div class="phone" aria-label="Summerflow retro candybar phone">
-        <img class="phone-frame phone-shell" src="./assets/web/phone-boot-01.png" alt="" draggable="false" />
-        <div class="lcd-screen" aria-hidden="true">
-          <img class="lcd-pixel-logo" src="./assets/logo-web/logo-pixel.png" alt="" draggable="false" />
-          <i class="lcd-scanline"></i>
-        </div>
-        <div class="phone-controls" aria-label="Phone logo navigation">
-          <button class="phone-hit hit-next-pad" type="button" data-action="next" aria-label="Next pixel logo"></button>
-        </div>
-      </div>
-
-      <div class="main-ring" aria-hidden="true">
-        <img src="./assets/web/main-ring.png" alt="" draggable="false" />
-      </div>
-
-      <svg class="rope-layer" aria-hidden="true">
-        <g class="rope rope-a"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
-        <g class="rope rope-b"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
-        <g class="rope rope-c"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
-        <g class="rope rope-d"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
-        <g class="rope rope-e"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g>
-      </svg>
-
+      <div class="page-logo" aria-label="Summerflow"><img src="./assets/logo-web/logo.png" alt="Summerflow" draggable="false" /></div>
+      <div class="phone" aria-label="Summerflow retro candybar phone"><img class="phone-frame phone-shell" src="./assets/web/phone-boot-01.png" alt="" draggable="false" /><div class="lcd-screen" aria-hidden="true"><img class="lcd-pixel-logo" src="./assets/logo-web/logo-pixel.png" alt="" draggable="false" /><i class="lcd-scanline"></i></div><div class="phone-controls" aria-label="Phone logo navigation"><button class="phone-hit hit-next-pad" type="button" data-action="next" aria-label="Next pixel logo"></button></div></div>
+      <div class="main-ring" aria-hidden="true"><img src="./assets/web/main-ring.png" alt="" draggable="false" /></div>
+      <svg class="rope-layer" aria-hidden="true"><g class="rope rope-a"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g><g class="rope rope-b"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g><g class="rope rope-c"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g><g class="rope rope-d"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g><g class="rope rope-e"><path class="rope-shadow"></path><path class="rope-base"></path><path class="rope-beads"></path></g></svg>
       <button class="charm charm-camera" type="button" data-destination="Lookbook" data-label="LOOKBOOK" aria-label="Camera, Lookbook"><img src="./assets/web/camera.png" alt="" draggable="false" /></button>
       <button class="charm charm-cd" type="button" data-destination="Playlist" data-label="PLAYLIST" aria-label="CD, Playlist"><img src="./assets/web/cd.png" alt="" draggable="false" /></button>
       <button class="charm charm-diary" type="button" data-destination="About / Story" data-label="STORY" aria-label="Diary, About / Story"><img src="./assets/web/diary.png" alt="" draggable="false" /></button>
       <button class="charm charm-hanger" type="button" data-destination="Clothes / Closet" data-label="CLOSET" aria-label="Hanger, Clothes / Closet"><img src="./assets/web/hanger.png" alt="" draggable="false" /></button>
       <button class="charm charm-envelope" type="button" data-destination="Order" data-label="ORDER" aria-label="Envelope, Order"><img src="./assets/web/envelope.png" alt="" draggable="false" /></button>
     </section>
-
-    <section class="destination-view" aria-live="polite" aria-hidden="true">
-      <div class="destination-card">
-        <button class="home-button" type="button" aria-label="Back to Summerflow home">← HOME</button>
-        <p class="destination-kicker">COMPOSITION + BOOT CHECK / <span data-view-kicker>DISCOVERY</span></p>
-        <div class="destination-icon" data-view-icon aria-hidden="true">♡</div>
-        <h1 data-view-title>LOOKBOOK</h1>
-        <p class="destination-copy" data-view-copy>placeholder content</p>
-        <p class="destination-note">content comes in 03</p>
-      </div>
-    </section>
-
-    <footer class="site-footer" aria-label="Copyright">
-      <p>©2026 Summerflow. All rights reserved.</p>
-    </footer>
+    <section class="destination-view" aria-live="polite" aria-hidden="true"><div class="destination-card"><button class="home-button" type="button" aria-label="Back to Summerflow home">← HOME</button><p class="destination-kicker">COMPOSITION + BOOT CHECK / <span data-view-kicker>DISCOVERY</span></p><div class="destination-icon" data-view-icon aria-hidden="true">♡</div><h1 data-view-title>LOOKBOOK</h1><p class="destination-copy" data-view-copy>placeholder content</p><p class="destination-note">content comes in 03</p></div></section>
+    <footer class="site-footer" aria-label="Copyright"><p>©2026 Summerflow. All rights reserved.</p></footer>
   </main>
-
-  <script>
-    (() => {
-      const current = document.body.dataset.build || '';
-      const refreshKey = 'summerflow-refresh-attempts';
-      fetch(`./build-version.json?t=${Date.now()}`, { cache: 'no-store' })
-        .then((response) => response.ok ? response.json() : null)
-        .then((data) => {
-          const latest = data && String(data.version || '');
-          if (!latest) return;
-
-          if (latest === current) {
-            sessionStorage.removeItem(refreshKey);
-            return;
-          }
-
-          const attempts = Number(sessionStorage.getItem(refreshKey) || '0');
-          if (attempts >= 3) return;
-          sessionStorage.setItem(refreshKey, String(attempts + 1));
-
-          const url = new URL(window.location.href);
-          url.searchParams.set('build', latest);
-          url.searchParams.set('_refresh', String(Date.now()));
-          window.location.replace(url.toString());
-        })
-        .catch(() => {});
-    })();
-  </script>
-  <script src="./script.js?v=mobile-patch-v28"></script>
-  <script src="./phone-buttons.js?v=mobile-patch-v28"></script>
-  <script src="./scrapbook.js?v=mobile-patch-v28"></script>
-  <script src="./camera-transition.js?v=camera-transition-v3"></script>
+  <script>(()=>{const current=document.body.dataset.build||'',refreshKey='summerflow-refresh-attempts';fetch(`./build-version.json?t=${Date.now()}`,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{const latest=data&&String(data.version||'');if(!latest)return;if(latest===current){sessionStorage.removeItem(refreshKey);return;}const attempts=Number(sessionStorage.getItem(refreshKey)||'0');if(attempts>=3)return;sessionStorage.setItem(refreshKey,String(attempts+1));const url=new URL(window.location.href);url.searchParams.set('build',latest);url.searchParams.set('_refresh',String(Date.now()));window.location.replace(url.toString());}).catch(()=>{});})();</script>
+  <script src="./script.js?v=mobile-patch-v29"></script>
+  <script src="./phone-buttons.js?v=mobile-patch-v29"></script>
+  <script src="./scrapbook.js?v=mobile-patch-v29"></script>
+  <script src="./camera-transition.js?v=camera-transition-v4"></script>
 </body>
 </html>
