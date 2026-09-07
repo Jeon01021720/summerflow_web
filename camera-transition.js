@@ -5,7 +5,6 @@
 
   const FRONT_SRC = camera.querySelector('img')?.getAttribute('src') || './assets/web/camera.png';
   const BACK_SRC = './assets/web/SF_polaroid_rotate.webp';
-  const OPTIONAL_MODEL_SRC = './assets/lookbook/model-01.jpg';
   const CLICK_THRESHOLD = 7;
   let pointerStart = null;
   let running = false;
@@ -50,21 +49,36 @@
   function buildTransition(rect) {
     const backdrop = document.createElement('div');
     backdrop.className = 'sf-camera-transition-backdrop';
+
     const shell = document.createElement('div');
     shell.className = 'sf-camera-transition-shell';
-    Object.assign(shell.style, { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` });
+    Object.assign(shell.style, {
+      left: `${rect.left}px`,
+      top: `${rect.top}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`
+    });
+
     const flipper = document.createElement('div');
     flipper.className = 'sf-camera-transition-flipper';
+
     const img = document.createElement('img');
-    img.className = 'sf-camera-transition-image'; img.alt = ''; img.draggable = false; img.src = FRONT_SRC;
-    const lcd = document.createElement('div'); lcd.className = 'sf-camera-transition-lcd';
-    const photo = document.createElement('img'); photo.className = 'sf-camera-transition-photo'; photo.alt = ''; photo.draggable = false;
-    const placeholder = document.createElement('div'); placeholder.className = 'sf-camera-transition-placeholder';
+    img.className = 'sf-camera-transition-image';
+    img.alt = '';
+    img.draggable = false;
+    img.src = FRONT_SRC;
+
+    const lcd = document.createElement('div');
+    lcd.className = 'sf-camera-transition-lcd';
+
+    const placeholder = document.createElement('div');
+    placeholder.className = 'sf-camera-transition-placeholder';
     placeholder.innerHTML = '<div><strong>MODEL SHOT</strong><span>PHOTO SOON / LOOKBOOK 03</span></div>';
-    photo.addEventListener('load', () => { photo.classList.add('is-loaded'); placeholder.style.display = 'none'; }, { once: true });
-    photo.addEventListener('error', () => photo.remove(), { once: true });
-    lcd.append(photo, placeholder); flipper.append(img, lcd); shell.append(flipper); document.body.append(backdrop, shell);
-    photo.src = OPTIONAL_MODEL_SRC;
+
+    lcd.append(placeholder);
+    flipper.append(img, lcd);
+    shell.append(flipper);
+    document.body.append(backdrop, shell);
     return { backdrop, shell, flipper, img, lcd };
   }
 
@@ -72,67 +86,98 @@
     if (running) return;
     running = true;
     closeExistingDestinationImmediately();
+
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const rect = camera.getBoundingClientRect();
     const currentRotation = rotationFromTransform(getComputedStyle(camera).transform);
     const target = targetBox();
     const ui = buildTransition(rect);
+
     document.body.classList.add('sf-camera-transition-active');
     requestAnimationFrame(() => ui.backdrop.classList.add('is-visible'));
+
     try {
       if (reduced) {
-        Object.assign(ui.shell.style, { left: `${target.left}px`, top: `${target.top}px`, width: `${target.width}px`, height: `${target.height}px` });
-        ui.img.src = BACK_SRC; ui.shell.classList.add('is-back'); ui.lcd.classList.add('is-on'); await sleep(650);
+        Object.assign(ui.shell.style, {
+          left: `${target.left}px`,
+          top: `${target.top}px`,
+          width: `${target.width}px`,
+          height: `${target.height}px`
+        });
+        ui.img.src = BACK_SRC;
+        ui.shell.classList.add('is-back');
+        ui.lcd.classList.add('is-on');
+        await sleep(850);
       } else {
         const move = ui.shell.animate([
           { left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px` },
           { left: `${target.left}px`, top: `${target.top}px`, width: `${target.width}px`, height: `${target.height}px` }
         ], { duration: 560, easing: 'cubic-bezier(.16,.84,.2,1)', fill: 'forwards' });
+
         const settle = ui.flipper.animate([
           { transform: `rotateZ(${currentRotation}deg) rotateY(0deg)` },
           { transform: 'rotateZ(0deg) rotateY(0deg)' }
         ], { duration: 560, easing: 'cubic-bezier(.16,.84,.2,1)', fill: 'forwards' });
+
         await Promise.all([move.finished, settle.finished]);
+
         await ui.flipper.animate([
           { transform: 'rotateZ(0deg) rotateY(0deg)' },
           { transform: 'rotateZ(-1deg) rotateY(90deg)' }
         ], { duration: 210, easing: 'cubic-bezier(.55,.05,.72,.34)', fill: 'forwards' }).finished;
-        ui.img.src = BACK_SRC; ui.shell.classList.add('is-back'); ui.flipper.style.transform = 'rotateZ(1deg) rotateY(-90deg)';
+
+        ui.img.src = BACK_SRC;
+        ui.shell.classList.add('is-back');
+        ui.flipper.style.transform = 'rotateZ(1deg) rotateY(-90deg)';
+
         await ui.flipper.animate([
           { transform: 'rotateZ(1deg) rotateY(-90deg)' },
           { transform: 'rotateZ(0deg) rotateY(0deg)' }
         ], { duration: 270, easing: 'cubic-bezier(.18,.76,.22,1)', fill: 'forwards' }).finished;
-        await sleep(170); ui.lcd.classList.add('is-on'); await sleep(800);
+
+        await sleep(160);
+        ui.lcd.classList.add('is-on');
+        await sleep(950);
       }
-      const lcdRect = ui.lcd.getBoundingClientRect();
-      const flight = document.createElement('div'); flight.className = 'sf-camera-lcd-flight';
-      Object.assign(flight.style, { left: `${lcdRect.left}px`, top: `${lcdRect.top}px`, width: `${lcdRect.width}px`, height: `${lcdRect.height}px` });
-      const flightInner = document.createElement('div'); flightInner.className = 'sf-camera-lcd-flight-inner'; flightInner.textContent = 'LOOKBOOK'; flight.append(flightInner); document.body.append(flight);
-      if (!reduced) {
-        await flight.animate([
-          { left: `${lcdRect.left}px`, top: `${lcdRect.top}px`, width: `${lcdRect.width}px`, height: `${lcdRect.height}px`, borderRadius: '16px' },
-          { left: '0px', top: '0px', width: `${window.innerWidth}px`, height: `${window.innerHeight}px`, borderRadius: '0px' }
-        ], { duration: 520, easing: 'cubic-bezier(.18,.82,.2,1)', fill: 'forwards' }).finished;
-      } else Object.assign(flight.style, { left: '0px', top: '0px', width: '100vw', height: '100vh', borderRadius: '0' });
+
+      ui.shell.animate([
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(1.035)' }
+      ], { duration: reduced ? 1 : 220, easing: 'ease-out', fill: 'forwards' });
+
+      ui.backdrop.classList.remove('is-visible');
+      await sleep(reduced ? 1 : 170);
       showLookbookDestination();
-      await flight.animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduced ? 1 : 260, fill: 'forwards' }).finished;
-      flight.remove();
     } catch (error) {
       console.warn('[Summerflow] camera transition fallback', error);
       showLookbookDestination();
     } finally {
-      ui.backdrop.classList.remove('is-visible'); ui.shell.remove(); await sleep(reduced ? 1 : 220); ui.backdrop.remove();
-      document.body.classList.remove('sf-camera-transition-active'); running = false;
+      ui.shell.remove();
+      await sleep(reduced ? 1 : 120);
+      ui.backdrop.remove();
+      document.body.classList.remove('sf-camera-transition-active');
+      running = false;
     }
   }
 
-  camera.addEventListener('pointerdown', (event) => { if (!running) pointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY }; });
+  camera.addEventListener('pointerdown', (event) => {
+    if (!running) pointerStart = { id: event.pointerId, x: event.clientX, y: event.clientY };
+  });
+
   camera.addEventListener('pointerup', (event) => {
     if (running || !pointerStart || pointerStart.id !== event.pointerId) return;
-    const distance = Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y); pointerStart = null;
+    const distance = Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y);
+    pointerStart = null;
     if (distance > CLICK_THRESHOLD) return;
-    closeExistingDestinationImmediately(); playTransition();
+    closeExistingDestinationImmediately();
+    playTransition();
   });
+
   camera.addEventListener('pointercancel', () => { pointerStart = null; });
-  camera.addEventListener('click', (event) => { if (!running && event.detail === 0) { closeExistingDestinationImmediately(); playTransition(); } });
+  camera.addEventListener('click', (event) => {
+    if (!running && event.detail === 0) {
+      closeExistingDestinationImmediately();
+      playTransition();
+    }
+  });
 })();
