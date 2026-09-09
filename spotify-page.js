@@ -7,9 +7,6 @@
   const SPOTIFY_URL = '';
   let down = null;
   let root = null;
-  let savedScrollY = 0;
-  let pageLocked = false;
-  let bodyStyle = null;
   let viewportTracking = false;
 
   function closeLegacyDestination() {
@@ -31,21 +28,30 @@
     style.id = 'sf-spotify-viewport-fix';
     style.textContent = `
       .sf-spotify-page{
-        top:var(--sf-vv-top,0px)!important;
-        bottom:auto!important;
+        position:absolute!important;
+        inset:auto!important;
+        left:var(--sf-page-left,0px)!important;
+        top:var(--sf-page-top,0px)!important;
+        width:var(--sf-vv-width,100vw)!important;
         height:var(--sf-vv-height,100dvh)!important;
         min-height:0!important;
-        display:flex!important;
-        align-items:flex-start!important;
-        justify-content:center!important;
-        overflow-x:hidden!important;
-        overflow-y:auto!important;
-        overscroll-behavior:contain;
-        -webkit-overflow-scrolling:touch;
+        padding:0!important;
+        display:grid!important;
+        place-items:center!important;
+        overflow:hidden!important;
+        overscroll-behavior:none!important;
+        touch-action:none!important;
       }
       .sf-spotify-page .sf-zine-wrap{
-        flex:0 0 auto;
-        margin:auto 0!important;
+        flex:none!important;
+        margin:0!important;
+        transform-origin:50% 50%!important;
+      }
+      .sf-spotify-page:not(.is-open) .sf-zine-wrap{
+        transform:translateY(16px) scale(var(--sf-fit-scale,1)) rotate(-.35deg)!important;
+      }
+      .sf-spotify-page.is-open .sf-zine-wrap{
+        transform:translateY(0) scale(var(--sf-fit-scale,1)) rotate(-.35deg)!important;
       }
       @media(max-height:700px){
         .sf-spotify-page .sf-zine-sheet{transform:none!important}
@@ -54,13 +60,38 @@
     document.head.append(style);
   }
 
+  function viewportMetrics() {
+    const viewport = window.visualViewport;
+    return {
+      left: viewport ? viewport.pageLeft : (window.scrollX || 0),
+      top: viewport ? viewport.pageTop : (window.scrollY || document.documentElement.scrollTop || 0),
+      width: viewport ? viewport.width : window.innerWidth,
+      height: viewport ? viewport.height : window.innerHeight,
+    };
+  }
+
   function syncVisualViewport() {
     if (!root) return;
-    const viewport = window.visualViewport;
-    const top = viewport ? viewport.offsetTop : 0;
-    const height = viewport ? viewport.height : window.innerHeight;
-    root.style.setProperty('--sf-vv-top', `${Math.max(0, top)}px`);
+    const { left, top, width, height } = viewportMetrics();
+    root.style.setProperty('--sf-page-left', `${left}px`);
+    root.style.setProperty('--sf-page-top', `${top}px`);
+    root.style.setProperty('--sf-vv-width', `${Math.max(1, width)}px`);
     root.style.setProperty('--sf-vv-height', `${Math.max(1, height)}px`);
+
+    const wrap = root.querySelector('.sf-zine-wrap');
+    if (!wrap) return;
+
+    wrap.style.setProperty('--sf-fit-scale', '1');
+    const naturalWidth = Math.max(1, wrap.offsetWidth);
+    const naturalHeight = Math.max(1, wrap.offsetHeight);
+    const safeX = 18;
+    const safeY = 18;
+    const fit = Math.min(
+      1,
+      Math.max(0.1, (width - safeX * 2) / naturalWidth),
+      Math.max(0.1, (height - safeY * 2) / naturalHeight)
+    );
+    wrap.style.setProperty('--sf-fit-scale', String(fit));
   }
 
   function startViewportTracking() {
@@ -68,6 +99,7 @@
     viewportTracking = true;
     syncVisualViewport();
     window.addEventListener('resize', syncVisualViewport, { passive: true });
+    window.addEventListener('scroll', syncVisualViewport, { passive: true });
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', syncVisualViewport, { passive: true });
       window.visualViewport.addEventListener('scroll', syncVisualViewport, { passive: true });
@@ -78,45 +110,15 @@
     if (!viewportTracking) return;
     viewportTracking = false;
     window.removeEventListener('resize', syncVisualViewport);
+    window.removeEventListener('scroll', syncVisualViewport);
     if (window.visualViewport) {
       window.visualViewport.removeEventListener('resize', syncVisualViewport);
       window.visualViewport.removeEventListener('scroll', syncVisualViewport);
     }
   }
 
-  function lockPage() {
-    if (pageLocked) return;
-    savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-    const style = document.body.style;
-    bodyStyle = {
-      position: style.position,
-      top: style.top,
-      left: style.left,
-      right: style.right,
-      width: style.width,
-      overflow: style.overflow,
-    };
-    style.position = 'fixed';
-    style.top = `-${savedScrollY}px`;
-    style.left = '0';
-    style.right = '0';
-    style.width = '100%';
-    style.overflow = 'hidden';
-    pageLocked = true;
-  }
-
-  function unlockPage() {
-    if (!pageLocked) return;
-    const style = document.body.style;
-    style.position = bodyStyle?.position || '';
-    style.top = bodyStyle?.top || '';
-    style.left = bodyStyle?.left || '';
-    style.right = bodyStyle?.right || '';
-    style.width = bodyStyle?.width || '';
-    style.overflow = bodyStyle?.overflow || '';
-    pageLocked = false;
-    bodyStyle = null;
-    window.scrollTo(0, savedScrollY);
+  function blockBackgroundScroll(event) {
+    if (root?.classList.contains('is-open')) event.preventDefault();
   }
 
   function buildWidget() {
@@ -181,6 +183,8 @@
     root.addEventListener('pointerdown', (event) => {
       if (event.target === root) closeWidget();
     });
+    root.addEventListener('wheel', blockBackgroundScroll, { passive: false });
+    root.addEventListener('touchmove', blockBackgroundScroll, { passive: false });
     root.querySelectorAll('a[aria-disabled="true"]').forEach((link) => {
       link.addEventListener('click', (event) => event.preventDefault());
     });
@@ -191,14 +195,12 @@
   function openWidget() {
     closeLegacyDestination();
     const page = buildWidget();
-    lockPage();
     page.setAttribute('aria-hidden', 'false');
-    page.scrollTop = 0;
-    document.body.classList.add('sf-spotify-open');
     startViewportTracking();
     requestAnimationFrame(() => {
       syncVisualViewport();
       requestAnimationFrame(() => {
+        syncVisualViewport();
         page.classList.add('is-open');
         page.querySelector('.sf-spotify-close')?.focus({ preventScroll: true });
       });
@@ -209,8 +211,6 @@
     if (!root?.classList.contains('is-open')) return;
     root.classList.remove('is-open');
     stopViewportTracking();
-    document.body.classList.remove('sf-spotify-open');
-    unlockPage();
     window.setTimeout(() => root?.setAttribute('aria-hidden', 'true'), 260);
     cd.focus({ preventScroll: true });
   }
