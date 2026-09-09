@@ -1,16 +1,16 @@
 (() => {
   const hanger = document.querySelector('.charm-hanger');
-  if (!hanger || hanger.dataset.sfClosetReady === '2') return;
-  hanger.dataset.sfClosetReady = '2';
+  if (!hanger || hanger.dataset.sfClosetReady === '3') return;
+  hanger.dataset.sfClosetReady = '3';
 
   const CLICK_THRESHOLD = 7;
   const pieces = [
-    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png' },
-    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png' },
-    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png' },
-    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png' },
-    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png' },
-    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png' }
+    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png', fit: 1.08, y: -10, x: 0 },
+    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png', fit: 1.10, y: -2, x: 0 },
+    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png', fit: 1.07, y: -8, x: 0 },
+    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png', fit: .98, y: -6, x: 0 },
+    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png', fit: 1.12, y: -4, x: 0 },
+    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png', fit: 1.08, y: -10, x: 0 }
   ];
   const STEP = Math.PI * 2 / pieces.length;
 
@@ -32,7 +32,7 @@
   }
 
   function assetPath(file) {
-    return `./assets/web/${encodeURIComponent(file)}?v=1`;
+    return `./assets/web/${encodeURIComponent(file)}?v=2`;
   }
 
   function buildCloset() {
@@ -58,7 +58,7 @@
           <div class="sf-circular-stage" tabindex="0" aria-label="Rotating circular clothing rack. Drag left or right to rotate.">
             <div class="sf-circular-rod" aria-hidden="true"><i></i></div>
             ${pieces.map((piece, index) => `
-              <article class="sf-round-item" data-i="${index}" aria-label="${piece.name}">
+              <article class="sf-round-item" data-i="${index}" aria-label="${piece.name}" style="--garment-fit:${piece.fit};--garment-y:${piece.y}px;--garment-x:${piece.x}px">
                 <img class="sf-round-hanger" src="./assets/web/hanger.png" alt="" draggable="false" aria-hidden="true" />
                 <img class="sf-round-garment" src="${assetPath(piece.file)}" alt="${piece.name}" draggable="false" />
                 <span class="sf-round-label">${piece.name}</span>
@@ -149,15 +149,17 @@
       const depth = (cos + 1) / 2;
       const x = centerX + sin * radiusX;
       const y = centerY + cos * radiusY;
-      const scale = 0.58 + depth * 0.46;
-      const opacity = 0.3 + depth * 0.7;
-      const labelOpacity = Math.max(0, Math.min(1, (depth - 0.28) / 0.38));
+      const scale = 0.56 + depth * 0.48;
+      const opacity = 0.10 + Math.pow(depth, 1.35) * 0.90;
+      const labelOpacity = Math.max(0, Math.min(1, (depth - 0.80) / 0.12));
+      const blur = (1 - depth) * 1.15;
 
       item.style.setProperty('--rack-x', `${x}px`);
       item.style.setProperty('--rack-y', `${y}px`);
       item.style.setProperty('--rack-scale', scale.toFixed(3));
       item.style.setProperty('--rack-opacity', opacity.toFixed(3));
       item.style.setProperty('--label-opacity', labelOpacity.toFixed(3));
+      item.style.setProperty('--rack-blur', `${blur.toFixed(2)}px`);
       item.style.zIndex = String(20 + Math.round(depth * 80));
       item.dataset.front = depth > 0.92 ? '1' : '0';
       item.setAttribute('aria-hidden', depth < 0.18 ? 'true' : 'false');
