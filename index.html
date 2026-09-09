@@ -8,11 +8,11 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Summerflow — Scrapbook Side Objects Prototype</title>
-  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v34" />
+  <link rel="stylesheet" href="./styles.css?v=mobile-patch-v35" />
   <link rel="stylesheet" href="./camera-transition.css?v=camera-transition-v6" />
-  <link rel="stylesheet" href="./spotify-page.css?v=spotify-page-v4" />
+  <link rel="stylesheet" href="./spotify-page.css?v=spotify-page-v5" />
 
-  <style id="mobile-decoration-v34">
+  <style id="mobile-decoration-v35">
     @media (max-width:700px){
       .star{opacity:.82!important;width:clamp(14px,4.9vw,24px)!important}
       .star.small{width:clamp(11px,3.6vw,18px)!important}
@@ -47,7 +47,7 @@
     }
   </style>
 </head>
-<body data-build="34">
+<body data-build="35">
   <main class="home" aria-label="Summerflow composition prototype">
     <div class="star-field" aria-hidden="true">
       <i class="star s01"></i><i class="star s02 tiny"></i><i class="star s03 small"></i>
@@ -81,10 +81,10 @@
     <footer class="site-footer" aria-label="Copyright"><p>©2026 Summerflow. All rights reserved.</p></footer>
   </main>
   <script>(()=>{const current=document.body.dataset.build||'',refreshKey='summerflow-refresh-attempts';fetch(`./build-version.json?t=${Date.now()}`,{cache:'no-store'}).then(r=>r.ok?r.json():null).then(data=>{const latest=data&&String(data.version||'');if(!latest)return;if(latest===current){sessionStorage.removeItem(refreshKey);return;}const attempts=Number(sessionStorage.getItem(refreshKey)||'0');if(attempts>=3)return;sessionStorage.setItem(refreshKey,String(attempts+1));const url=new URL(window.location.href);url.searchParams.set('build',latest);url.searchParams.set('_refresh',String(Date.now()));window.location.replace(url.toString());}).catch(()=>{});})();</script>
-  <script src="./script.js?v=mobile-patch-v34"></script>
-  <script src="./phone-buttons.js?v=mobile-patch-v34"></script>
-  <script src="./scrapbook.js?v=mobile-patch-v34"></script>
+  <script src="./script.js?v=mobile-patch-v35"></script>
+  <script src="./phone-buttons.js?v=mobile-patch-v35"></script>
+  <script src="./scrapbook.js?v=mobile-patch-v35"></script>
   <script src="./camera-transition.js?v=camera-transition-v6"></script>
-  <script src="./spotify-page.js?v=spotify-page-v3"></script>
+  <script src="./spotify-page.js?v=spotify-page-v5"></script>
 </body>
 </html>

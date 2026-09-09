@@ -29,38 +29,53 @@
     root.setAttribute('aria-hidden', 'true');
     root.setAttribute('aria-label', 'Summerflow Spotify playlist');
     root.innerHTML = `
-      <div class="sf-spotify-widget" role="dialog" aria-modal="true" aria-label="Summerflow playlist share">
-        <div class="sf-spotify-widget-head">
-          <span>summerflow shared a playlist ♡</span>
+      <div class="sf-zine-wrap" role="dialog" aria-modal="true" aria-label="Summerflow mini playlist zine">
+        <div class="sf-zine-topbar">
+          <span>summerflow shared a tiny music note ♡</span>
           <button class="sf-spotify-close" type="button" aria-label="Close playlist">×</button>
         </div>
 
-        <div class="sf-spotify-share-card">
-          <div class="sf-spotify-brandline">
-            <span class="sf-spotify-dot" aria-hidden="true">●</span>
-            <strong>SPOTIFY</strong>
-            <span class="sf-spotify-pill">PLAYLIST</span>
+        <article class="sf-zine">
+          <i class="sf-zine-paper sf-zine-paper-one" aria-hidden="true"></i>
+          <i class="sf-zine-paper sf-zine-paper-two" aria-hidden="true"></i>
+
+          <div class="sf-zine-sheet">
+            <span class="sf-zine-tape" aria-hidden="true"></span>
+            <span class="sf-zine-sparkles" aria-hidden="true">✦ ♡ ✷</span>
+
+            <header class="sf-zine-masthead">
+              <div>
+                <span class="sf-zine-issue">MINI ISSUE 01</span>
+                <strong>SUMMERFLOW RADIO</strong>
+              </div>
+              <span class="sf-zine-spotify"><b>●</b> SPOTIFY</span>
+            </header>
+
+            <section class="sf-zine-hero">
+              <div class="sf-zine-logo-card">
+                <img src="./assets/logo-web/logo.png" alt="Summerflow" />
+              </div>
+              <div class="sf-zine-intro">
+                <span class="sf-zine-stamp">PLAYLIST NOTE</span>
+                <h1>Summerflow<br />Playlist</h1>
+                <p>songs for when summer stays a little longer ♡</p>
+              </div>
+            </section>
+
+            <div class="sf-zine-divider" aria-hidden="true"><span>today's little rotation</span></div>
+
+            <div class="sf-zine-tracks" aria-label="Playlist preview">
+              <div class="sf-zine-track tone-pink"><span>01</span><strong>track title</strong><small>artist</small></div>
+              <div class="sf-zine-track tone-lilac"><span>02</span><strong>track title</strong><small>artist</small></div>
+              <div class="sf-zine-track tone-yellow"><span>03</span><strong>track title</strong><small>artist</small></div>
+            </div>
+
+            <footer class="sf-zine-footer">
+              <p>festival days · late afternoons · tiny summer memories</p>
+              <a class="sf-spotify-open" ${linkAttrs()}>OPEN IN SPOTIFY <span>↗</span></a>
+            </footer>
           </div>
-
-          <div class="sf-spotify-cover">
-            <img src="./assets/logo-web/logo.png" alt="Summerflow" />
-          </div>
-
-          <div class="sf-spotify-copy">
-            <h1>Summerflow Playlist</h1>
-            <p>songs we're listening to this summer</p>
-          </div>
-
-          <div class="sf-spotify-mini-list" aria-label="Playlist preview">
-            <div><span>01</span><strong>track title</strong><small>artist</small></div>
-            <div><span>02</span><strong>track title</strong><small>artist</small></div>
-            <div><span>03</span><strong>track title</strong><small>artist</small></div>
-          </div>
-
-          <a class="sf-spotify-open" ${linkAttrs()}>OPEN IN SPOTIFY <span>↗</span></a>
-        </div>
-
-        <div class="sf-spotify-widget-foot">for festival days, late afternoons & tiny summer memories</div>
+        </article>
       </div>`;
 
     root.querySelector('.sf-spotify-close')?.addEventListener('click', closeWidget);
@@ -80,7 +95,10 @@
     page.setAttribute('aria-hidden', 'false');
     document.body.classList.add('sf-spotify-open');
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => page.classList.add('is-open'));
+      requestAnimationFrame(() => {
+        page.classList.add('is-open');
+        page.querySelector('.sf-spotify-close')?.focus({ preventScroll: true });
+      });
     });
   }
 
