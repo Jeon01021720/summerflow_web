@@ -1,22 +1,28 @@
 (() => {
   const hanger = document.querySelector('.charm-hanger');
-  if (!hanger || hanger.dataset.sfClosetReady === '1') return;
-  hanger.dataset.sfClosetReady = '1';
+  if (!hanger || hanger.dataset.sfClosetReady === '2') return;
+  hanger.dataset.sfClosetReady = '2';
 
   const CLICK_THRESHOLD = 7;
-  const names = [
-    'Sky Slim Soccer Jersey',
-    'Victory 85 Off-shoulder Tee',
-    'Buried At Yonsei Tee',
-    'Yonsei 85 Baseball Dress',
-    'Angel Wing Off-shoulder Tee',
-    'Navy Soccer Jersey'
+  const pieces = [
+    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png' },
+    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png' },
+    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png' },
+    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png' },
+    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png' },
+    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png' }
   ];
+  const STEP = Math.PI * 2 / pieces.length;
+
   let root = null;
-  let viewport = null;
+  let stage = null;
+  let itemEls = [];
   let down = null;
   let drag = null;
   let tracking = false;
+  let rotation = 0;
+  let animationFrame = 0;
+  let wheelLocked = false;
 
   function closeLegacyDestination() {
     const legacy = document.querySelector('.destination-view');
@@ -25,66 +31,164 @@
     legacy.setAttribute('aria-hidden', 'true');
   }
 
+  function assetPath(file) {
+    return `./assets/web/${encodeURIComponent(file)}?v=1`;
+  }
+
   function buildCloset() {
     if (root) return root;
     root = document.createElement('section');
     root.className = 'sf-closet-page';
     root.setAttribute('aria-hidden', 'true');
-    root.setAttribute('aria-label', 'Summerflow closet rack');
+    root.setAttribute('aria-label', 'Summerflow circular closet rack');
     root.innerHTML = `
-      <div class="sf-closet-shell" role="dialog" aria-modal="true" aria-label="Summerflow Closet Rack 01">
+      <div class="sf-closet-shell" role="dialog" aria-modal="true" aria-label="Summerflow Closet Rack 02">
         <header class="sf-closet-head">
           <div class="sf-closet-title">
-            <small>CLOSET RACK 01 · SUMMER 2026</small>
+            <small>CLOSET RACK 02 · SUMMER 2026</small>
             <h1>things we’d<br>wear all summer</h1>
-            <p>drag the rack and look through the summerflow pieces ♡</p>
+            <p>swipe the round rack and turn through the summerflow pieces ♡</p>
           </div>
           <button class="sf-closet-close" type="button" aria-label="Close closet">×</button>
         </header>
-        <span class="sf-closet-star a" aria-hidden="true">✦</span><span class="sf-closet-star b" aria-hidden="true">♡</span>
-        <div class="sf-closet-viewport" tabindex="0" aria-label="Scrollable clothing rack">
-          <div class="sf-rack-canvas">
-            <div class="sf-rack-rod" aria-hidden="true"></div>
-            ${Array.from({length:6},()=>'<img class="sf-rack-hanger" src="./assets/web/hanger.png" alt="" draggable="false" aria-hidden="true" />').join('')}
-            <img class="sf-rack-garments" src="./assets/closet/closet-garments.webp?v=1" alt="Summerflow clothing collection" draggable="false" />
-            ${names.map((name,index)=>`<span class="sf-rack-label" data-i="${index}">${name}</span>`).join('')}
+        <span class="sf-closet-star a" aria-hidden="true">✦</span>
+        <span class="sf-closet-star b" aria-hidden="true">♡</span>
+        <div class="sf-circular-wrap">
+          <button class="sf-rack-arrow sf-rack-prev" type="button" aria-label="Previous piece">‹</button>
+          <div class="sf-circular-stage" tabindex="0" aria-label="Rotating circular clothing rack. Drag left or right to rotate.">
+            <div class="sf-circular-rod" aria-hidden="true"><i></i></div>
+            ${pieces.map((piece, index) => `
+              <article class="sf-round-item" data-i="${index}" aria-label="${piece.name}">
+                <img class="sf-round-hanger" src="./assets/web/hanger.png" alt="" draggable="false" aria-hidden="true" />
+                <img class="sf-round-garment" src="${assetPath(piece.file)}" alt="${piece.name}" draggable="false" />
+                <span class="sf-round-label">${piece.name}</span>
+              </article>`).join('')}
           </div>
+          <button class="sf-rack-arrow sf-rack-next" type="button" aria-label="Next piece">›</button>
         </div>
-        <span class="sf-closet-hint">DRAG THE RACK</span>
+        <span class="sf-closet-hint">SWIPE · DRAG · TURN</span>
       </div>`;
 
-    viewport = root.querySelector('.sf-closet-viewport');
-    root.querySelector('.sf-closet-close')?.addEventListener('click', closeCloset);
-    root.addEventListener('pointerdown', (event) => { if (event.target === root) closeCloset(); });
-    root.addEventListener('wheel', (event) => {
-      if (!root.classList.contains('is-open') || !viewport) return;
-      if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-        viewport.scrollLeft += event.deltaY;
-        event.preventDefault();
-      }
-    }, { passive:false });
+    stage = root.querySelector('.sf-circular-stage');
+    itemEls = [...root.querySelectorAll('.sf-round-item')];
 
-    viewport?.addEventListener('pointerdown', (event) => {
-      if (event.pointerType === 'touch') return;
-      drag = { id:event.pointerId, x:event.clientX, scroll:viewport.scrollLeft };
-      viewport.setPointerCapture?.(event.pointerId);
-      viewport.classList.add('is-dragging');
+    root.querySelector('.sf-closet-close')?.addEventListener('click', closeCloset);
+    root.querySelector('.sf-rack-prev')?.addEventListener('click', () => rotateBy(1));
+    root.querySelector('.sf-rack-next')?.addEventListener('click', () => rotateBy(-1));
+    root.addEventListener('pointerdown', (event) => {
+      if (event.target === root) closeCloset();
     });
-    viewport?.addEventListener('pointermove', (event) => {
-      if (!drag || drag.id !== event.pointerId) return;
-      viewport.scrollLeft = drag.scroll - (event.clientX - drag.x);
+
+    stage?.addEventListener('pointerdown', (event) => {
+      if (event.button !== undefined && event.button !== 0) return;
+      cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      drag = { id: event.pointerId, x: event.clientX, startRotation: rotation, moved: false };
+      stage.setPointerCapture?.(event.pointerId);
+      stage.classList.add('is-dragging');
       event.preventDefault();
     });
+
+    stage?.addEventListener('pointermove', (event) => {
+      if (!drag || drag.id !== event.pointerId) return;
+      const dx = event.clientX - drag.x;
+      drag.moved ||= Math.abs(dx) > 4;
+      rotation = drag.startRotation + dx * 0.0065;
+      renderRack();
+      event.preventDefault();
+    });
+
     const releaseDrag = (event) => {
       if (!drag || drag.id !== event.pointerId) return;
-      if (viewport.hasPointerCapture?.(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
-      viewport.classList.remove('is-dragging');
+      if (stage.hasPointerCapture?.(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+      stage.classList.remove('is-dragging');
+      const moved = drag.moved;
       drag = null;
+      if (moved) snapToNearest();
     };
-    viewport?.addEventListener('pointerup', releaseDrag);
-    viewport?.addEventListener('pointercancel', releaseDrag);
+    stage?.addEventListener('pointerup', releaseDrag);
+    stage?.addEventListener('pointercancel', releaseDrag);
+
+    stage?.addEventListener('wheel', (event) => {
+      if (!root?.classList.contains('is-open')) return;
+      event.preventDefault();
+      if (wheelLocked) return;
+      wheelLocked = true;
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+      rotateBy(delta > 0 ? -1 : 1);
+      setTimeout(() => { wheelLocked = false; }, 260);
+    }, { passive: false });
+
+    stage?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        rotateBy(1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        rotateBy(-1);
+      }
+    });
+
     document.body.append(root);
     return root;
+  }
+
+  function renderRack() {
+    if (!stage || !itemEls.length) return;
+    const w = stage.clientWidth || 900;
+    const h = stage.clientHeight || 560;
+    const radiusX = Math.min(w * 0.37, 460);
+    const radiusY = Math.min(Math.max(h * 0.105, 38), 66);
+    const centerX = w / 2;
+    const centerY = Math.min(Math.max(h * 0.17, 78), 120);
+
+    itemEls.forEach((item, index) => {
+      const angle = rotation + index * STEP;
+      const sin = Math.sin(angle);
+      const cos = Math.cos(angle);
+      const depth = (cos + 1) / 2;
+      const x = centerX + sin * radiusX;
+      const y = centerY + cos * radiusY;
+      const scale = 0.58 + depth * 0.46;
+      const opacity = 0.3 + depth * 0.7;
+      const labelOpacity = Math.max(0, Math.min(1, (depth - 0.28) / 0.38));
+
+      item.style.setProperty('--rack-x', `${x}px`);
+      item.style.setProperty('--rack-y', `${y}px`);
+      item.style.setProperty('--rack-scale', scale.toFixed(3));
+      item.style.setProperty('--rack-opacity', opacity.toFixed(3));
+      item.style.setProperty('--label-opacity', labelOpacity.toFixed(3));
+      item.style.zIndex = String(20 + Math.round(depth * 80));
+      item.dataset.front = depth > 0.92 ? '1' : '0';
+      item.setAttribute('aria-hidden', depth < 0.18 ? 'true' : 'false');
+    });
+  }
+
+  function animateTo(target) {
+    cancelAnimationFrame(animationFrame);
+    const start = rotation;
+    const change = target - start;
+    const started = performance.now();
+    const duration = 420;
+
+    const tick = (now) => {
+      const t = Math.min(1, (now - started) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      rotation = start + change * eased;
+      renderRack();
+      if (t < 1) animationFrame = requestAnimationFrame(tick);
+      else animationFrame = 0;
+    };
+    animationFrame = requestAnimationFrame(tick);
+  }
+
+  function rotateBy(direction) {
+    const base = Math.round(rotation / STEP) * STEP;
+    animateTo(base + direction * STEP);
+  }
+
+  function snapToNearest() {
+    animateTo(Math.round(rotation / STEP) * STEP);
   }
 
   function metrics() {
@@ -96,57 +200,79 @@
       height: vv ? vv.height : window.innerHeight
     };
   }
+
   function syncViewport() {
     if (!root) return;
     const m = metrics();
     root.style.setProperty('--sf-closet-left', `${m.left}px`);
     root.style.setProperty('--sf-closet-top', `${m.top}px`);
-    root.style.setProperty('--sf-closet-width', `${Math.max(1,m.width)}px`);
-    root.style.setProperty('--sf-closet-height', `${Math.max(1,m.height)}px`);
+    root.style.setProperty('--sf-closet-width', `${Math.max(1, m.width)}px`);
+    root.style.setProperty('--sf-closet-height', `${Math.max(1, m.height)}px`);
+    renderRack();
   }
+
   function startTracking() {
     if (tracking) return;
-    tracking = true; syncViewport();
-    window.addEventListener('resize',syncViewport,{passive:true});
-    window.addEventListener('scroll',syncViewport,{passive:true});
-    window.visualViewport?.addEventListener('resize',syncViewport,{passive:true});
-    window.visualViewport?.addEventListener('scroll',syncViewport,{passive:true});
+    tracking = true;
+    syncViewport();
+    window.addEventListener('resize', syncViewport, { passive: true });
+    window.addEventListener('scroll', syncViewport, { passive: true });
+    window.visualViewport?.addEventListener('resize', syncViewport, { passive: true });
+    window.visualViewport?.addEventListener('scroll', syncViewport, { passive: true });
   }
+
   function stopTracking() {
     if (!tracking) return;
     tracking = false;
-    window.removeEventListener('resize',syncViewport); window.removeEventListener('scroll',syncViewport);
-    window.visualViewport?.removeEventListener('resize',syncViewport); window.visualViewport?.removeEventListener('scroll',syncViewport);
+    window.removeEventListener('resize', syncViewport);
+    window.removeEventListener('scroll', syncViewport);
+    window.visualViewport?.removeEventListener('resize', syncViewport);
+    window.visualViewport?.removeEventListener('scroll', syncViewport);
   }
+
   function openCloset() {
     closeLegacyDestination();
     const page = buildCloset();
-    page.setAttribute('aria-hidden','false');
+    page.setAttribute('aria-hidden', 'false');
     document.body.classList.add('sf-closet-open');
     startTracking();
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      syncViewport(); page.classList.add('is-open');
-      page.querySelector('.sf-closet-close')?.focus({preventScroll:true});
-      if (viewport) viewport.scrollLeft = Math.max(0,(viewport.scrollWidth-viewport.clientWidth)*.12);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      syncViewport();
+      page.classList.add('is-open');
+      renderRack();
+      page.querySelector('.sf-closet-close')?.focus({ preventScroll: true });
     }));
   }
+
   function closeCloset() {
     if (!root?.classList.contains('is-open')) return;
-    root.classList.remove('is-open'); document.body.classList.remove('sf-closet-open'); stopTracking();
-    setTimeout(()=>root?.setAttribute('aria-hidden','true'),280);
-    hanger.focus({preventScroll:true});
+    root.classList.remove('is-open');
+    document.body.classList.remove('sf-closet-open');
+    stopTracking();
+    cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+    setTimeout(() => root?.setAttribute('aria-hidden', 'true'), 280);
+    hanger.focus({ preventScroll: true });
   }
 
-  hanger.addEventListener('pointerdown',(event)=>{
+  hanger.addEventListener('pointerdown', (event) => {
     if (event.button !== undefined && event.button !== 0) return;
-    down={id:event.pointerId,x:event.clientX,y:event.clientY};
+    down = { id: event.pointerId, x: event.clientX, y: event.clientY };
   });
-  hanger.addEventListener('pointerup',(event)=>{
-    if (!down || down.id!==event.pointerId) return;
-    const distance=Math.hypot(event.clientX-down.x,event.clientY-down.y); down=null;
-    if(distance<=CLICK_THRESHOLD) queueMicrotask(openCloset);
+  hanger.addEventListener('pointerup', (event) => {
+    if (!down || down.id !== event.pointerId) return;
+    const distance = Math.hypot(event.clientX - down.x, event.clientY - down.y);
+    down = null;
+    if (distance <= CLICK_THRESHOLD) queueMicrotask(openCloset);
   });
-  hanger.addEventListener('pointercancel',()=>{down=null});
-  hanger.addEventListener('click',(event)=>{if(event.detail===0) queueMicrotask(openCloset)});
-  document.addEventListener('keydown',(event)=>{if(event.key==='Escape'&&root?.classList.contains('is-open')){event.preventDefault();closeCloset();}});
+  hanger.addEventListener('pointercancel', () => { down = null; });
+  hanger.addEventListener('click', (event) => {
+    if (event.detail === 0) queueMicrotask(openCloset);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && root?.classList.contains('is-open')) {
+      event.preventDefault();
+      closeCloset();
+    }
+  });
 })();
