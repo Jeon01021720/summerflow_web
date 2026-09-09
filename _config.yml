@@ -1,0 +1,11 @@
+# Summerflow is a static prototype. Keep repository source/backups out of the Pages artifact.
+exclude:
+  - Summerflow_02-2C_Mobile_Background_PATCH_v16_UPLOAD_READY
+  - assets/source
+  - assets/logo-source
+  - assets/pixel-logos-source
+  - BUILD_NOTES.md
+  - BUILD_NOTES.html
+  - README.md
+  - RUN_WINDOWS.bat
+  - RUN_macOS.command
