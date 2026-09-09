@@ -1,5 +1,5 @@
 (() => {
-  const OPEN_DIARY_SRC = './assets/web/diary-open.svg';
+  const OPEN_DIARY_SRC = './assets/web/diary-open.webp?v=1';
 
   function swapOpenDiary(root = document) {
     const image = root.querySelector?.('.sf-memory-diary');
