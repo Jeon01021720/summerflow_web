@@ -1,16 +1,16 @@
 (() => {
   const hanger = document.querySelector('.charm-hanger');
-  if (!hanger || hanger.dataset.sfClosetReady === '3') return;
-  hanger.dataset.sfClosetReady = '3';
+  if (!hanger || hanger.dataset.sfClosetReady === '4') return;
+  hanger.dataset.sfClosetReady = '4';
 
   const CLICK_THRESHOLD = 7;
   const pieces = [
-    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png', fit: 1.08, y: -10, x: 0 },
-    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png', fit: 1.10, y: -2, x: 0 },
-    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png', fit: 1.07, y: -8, x: 0 },
-    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png', fit: .98, y: -6, x: 0 },
-    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png', fit: 1.12, y: -4, x: 0 },
-    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png', fit: 1.08, y: -10, x: 0 }
+    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png', fit: 1.08, y: -22, x: 0 },
+    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png', fit: 1.10, y: -14, x: 0 },
+    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png', fit: 1.07, y: -20, x: 0 },
+    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png', fit: 1.13, y: -14, x: 0 },
+    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png', fit: 1.12, y: -16, x: 0 },
+    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png', fit: 1.08, y: -22, x: 0 }
   ];
   const STEP = Math.PI * 2 / pieces.length;
 
