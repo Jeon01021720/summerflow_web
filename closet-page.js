@@ -5,15 +5,15 @@
 
   const CLICK_THRESHOLD = 7;
   const pieces = [
-    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png', fit: 1.03, y: 0 },
-    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png', fit: 1.05, y: 0 },
-    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png', fit: 1.03, y: 0 },
-    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png', fit: 1.13, y: 0 },
-    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png', fit: 1.06, y: 0 },
-    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png', fit: 1.03, y: 0 },
-    { name: 'Midnight Cross Bandana', file: 'Midnight Cross Bandana.png', fit: .98, y: 0 },
-    { name: 'Yonsei Bangle', file: 'Yonsei Bangle.png', fit: .94, y: 0 },
-    { name: 'Soda Dot Socks', file: 'Soda Dot Socks.png', fit: 1.00, y: 0 }
+    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.webp', fit: 1.03, y: 0 },
+    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.webp', fit: 1.05, y: 0 },
+    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.webp', fit: 1.03, y: 0 },
+    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.webp', fit: 1.13, y: 0 },
+    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.webp', fit: 1.06, y: 0 },
+    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.webp', fit: 1.03, y: 0 },
+    { name: 'Midnight Cross Bandana', file: 'Midnight Cross Bandana.webp', fit: .98, y: 0 },
+    { name: 'Yonsei Bangle', file: 'Yonsei Bangle.webp', fit: .94, y: 0 },
+    { name: 'Soda Dot Socks', file: 'Soda Dot Socks.webp', fit: 1.00, y: 0 }
   ];
   const STEP = Math.PI * 2 / pieces.length;
 
@@ -35,7 +35,7 @@
   }
 
   function assetPath(file) {
-    return `./assets/web/${encodeURIComponent(file)}?v=3`;
+    return `./assets/web/${encodeURIComponent(file)}?v=4`;
   }
 
   function buildCloset() {
