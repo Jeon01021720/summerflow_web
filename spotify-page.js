@@ -4,7 +4,7 @@
   cd.dataset.sfSpotifyReady = '1';
 
   const CLICK_THRESHOLD = 7;
-  const SPOTIFY_URL = '';
+  const SPOTIFY_URL = 'https://open.spotify.com/playlist/1mYd4XNY1AXb4qY4LjpnS3?si=316516ec64ab4b18';
   let down = null;
   let root = null;
   let viewportTracking = false;
@@ -166,9 +166,9 @@
             <div class="sf-zine-divider" aria-hidden="true"><span>today's little rotation</span></div>
 
             <div class="sf-zine-tracks" aria-label="Playlist preview">
-              <div class="sf-zine-track tone-pink"><span>01</span><strong>track title</strong><small>artist</small></div>
-              <div class="sf-zine-track tone-lilac"><span>02</span><strong>track title</strong><small>artist</small></div>
-              <div class="sf-zine-track tone-yellow"><span>03</span><strong>track title</strong><small>artist</small></div>
+              <div class="sf-zine-track tone-pink"><span>01</span><strong>OMG</strong><small>Newjeans</small></div>
+              <div class="sf-zine-track tone-lilac"><span>02</span><strong>ETA</strong><small>Newjeans</small></div>
+              <div class="sf-zine-track tone-yellow"><span>03</span><strong>Howsweet</strong><small>Newjeans</small></div>
             </div>
 
             <footer class="sf-zine-footer">
