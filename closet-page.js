@@ -1,16 +1,19 @@
 (() => {
   const hanger = document.querySelector('.charm-hanger');
-  if (!hanger || hanger.dataset.sfClosetReady === '4') return;
-  hanger.dataset.sfClosetReady = '4';
+  if (!hanger || hanger.dataset.sfClosetReady === '5') return;
+  hanger.dataset.sfClosetReady = '5';
 
   const CLICK_THRESHOLD = 7;
   const pieces = [
-    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png', fit: 1.08, y: -22, x: 0 },
-    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png', fit: 1.10, y: -14, x: 0 },
-    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png', fit: 1.07, y: -20, x: 0 },
-    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png', fit: 1.13, y: -14, x: 0 },
-    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png', fit: 1.12, y: -16, x: 0 },
-    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png', fit: 1.08, y: -22, x: 0 }
+    { name: 'Sky Slim Soccer Jersey', file: 'Sky Slim Soccer Jersey.png', fit: 1.03, y: 0 },
+    { name: 'Victory 85 Off-shoulder Tee', file: 'Victory 85 Off-shoulder Tee.png', fit: 1.05, y: 0 },
+    { name: 'Buried At Yonsei Tee', file: 'Buried At Yonsei Tee.png', fit: 1.03, y: 0 },
+    { name: 'Yonsei 85 Baseball Dress', file: 'Yonsei 85 Baseball Dress.png', fit: 1.13, y: 0 },
+    { name: 'Angel Wing Off-shoulder Tee', file: 'Angel Wing Off-shoulder Tee.png', fit: 1.06, y: 0 },
+    { name: 'Navy Soccer Jersey', file: 'Navy Soccer Jersey.png', fit: 1.03, y: 0 },
+    { name: 'Midnight Cross Bandana', file: 'Midnight Cross Bandana.png', fit: .98, y: 0 },
+    { name: 'Yonsei Bangle', file: 'Yonsei Bangle.png', fit: .94, y: 0 },
+    { name: 'Soda Dot Socks', file: 'Soda Dot Socks.png', fit: 1.00, y: 0 }
   ];
   const STEP = Math.PI * 2 / pieces.length;
 
@@ -32,7 +35,7 @@
   }
 
   function assetPath(file) {
-    return `./assets/web/${encodeURIComponent(file)}?v=2`;
+    return `./assets/web/${encodeURIComponent(file)}?v=3`;
   }
 
   function buildCloset() {
@@ -40,37 +43,35 @@
     root = document.createElement('section');
     root.className = 'sf-closet-page';
     root.setAttribute('aria-hidden', 'true');
-    root.setAttribute('aria-label', 'Summerflow circular closet rack');
+    root.setAttribute('aria-label', 'Summerflow product carousel');
     root.innerHTML = `
-      <div class="sf-closet-shell" role="dialog" aria-modal="true" aria-label="Summerflow Closet Rack 02">
+      <div class="sf-closet-shell" role="dialog" aria-modal="true" aria-label="Summerflow Closet 03">
         <header class="sf-closet-head">
           <div class="sf-closet-title">
-            <small>CLOSET RACK 02 · SUMMER 2026</small>
+            <small>CLOSET 03 · SUMMER 2026</small>
             <h1>things we’d<br>wear all summer</h1>
-            <p>swipe the round rack and turn through the summerflow pieces ♡</p>
+            <p>swipe left or right and look through the summerflow pieces ♡</p>
           </div>
           <button class="sf-closet-close" type="button" aria-label="Close closet">×</button>
         </header>
         <span class="sf-closet-star a" aria-hidden="true">✦</span>
         <span class="sf-closet-star b" aria-hidden="true">♡</span>
-        <div class="sf-circular-wrap">
+        <div class="sf-carousel-wrap">
           <button class="sf-rack-arrow sf-rack-prev" type="button" aria-label="Previous piece">‹</button>
-          <div class="sf-circular-stage" tabindex="0" aria-label="Rotating circular clothing rack. Drag left or right to rotate.">
-            <div class="sf-circular-rod" aria-hidden="true"><i></i></div>
+          <div class="sf-product-stage" tabindex="0" aria-label="Summerflow products. Drag left or right to browse.">
             ${pieces.map((piece, index) => `
-              <article class="sf-round-item" data-i="${index}" aria-label="${piece.name}" style="--garment-fit:${piece.fit};--garment-y:${piece.y}px;--garment-x:${piece.x}px">
-                <img class="sf-round-hanger" src="./assets/web/hanger.png" alt="" draggable="false" aria-hidden="true" />
-                <img class="sf-round-garment" src="${assetPath(piece.file)}" alt="${piece.name}" draggable="false" />
-                <span class="sf-round-label">${piece.name}</span>
+              <article class="sf-product-item" data-i="${index}" aria-label="${piece.name}" style="--product-fit:${piece.fit};--product-y:${piece.y}px">
+                <img class="sf-product-image" src="${assetPath(piece.file)}" alt="${piece.name}" draggable="false" />
+                <span class="sf-product-label">${piece.name}</span>
               </article>`).join('')}
           </div>
           <button class="sf-rack-arrow sf-rack-next" type="button" aria-label="Next piece">›</button>
         </div>
-        <span class="sf-closet-hint">SWIPE · DRAG · TURN</span>
+        <span class="sf-closet-hint">SWIPE · DRAG</span>
       </div>`;
 
-    stage = root.querySelector('.sf-circular-stage');
-    itemEls = [...root.querySelectorAll('.sf-round-item')];
+    stage = root.querySelector('.sf-product-stage');
+    itemEls = [...root.querySelectorAll('.sf-product-item')];
 
     root.querySelector('.sf-closet-close')?.addEventListener('click', closeCloset);
     root.querySelector('.sf-rack-prev')?.addEventListener('click', () => rotateBy(1));
@@ -94,7 +95,7 @@
       const dx = event.clientX - drag.x;
       drag.moved ||= Math.abs(dx) > 4;
       rotation = drag.startRotation + dx * 0.0065;
-      renderRack();
+      renderCarousel();
       event.preventDefault();
     });
 
@@ -133,14 +134,13 @@
     return root;
   }
 
-  function renderRack() {
+  function renderCarousel() {
     if (!stage || !itemEls.length) return;
     const w = stage.clientWidth || 900;
     const h = stage.clientHeight || 560;
-    const radiusX = Math.min(w * 0.37, 460);
-    const radiusY = Math.min(Math.max(h * 0.105, 38), 66);
+    const radiusX = Math.min(w * 0.42, 500);
     const centerX = w / 2;
-    const centerY = Math.min(Math.max(h * 0.17, 78), 120);
+    const centerY = Math.min(Math.max(h * 0.44, 180), 300);
 
     itemEls.forEach((item, index) => {
       const angle = rotation + index * STEP;
@@ -148,21 +148,21 @@
       const cos = Math.cos(angle);
       const depth = (cos + 1) / 2;
       const x = centerX + sin * radiusX;
-      const y = centerY + cos * radiusY;
-      const scale = 0.56 + depth * 0.48;
-      const opacity = 0.10 + Math.pow(depth, 1.35) * 0.90;
-      const labelOpacity = Math.max(0, Math.min(1, (depth - 0.80) / 0.12));
-      const blur = (1 - depth) * 1.15;
+      const y = centerY + (1 - depth) * 18;
+      const scale = 0.46 + depth * 0.62;
+      const opacity = 0.05 + Math.pow(depth, 1.55) * 0.95;
+      const labelOpacity = Math.max(0, Math.min(1, (depth - 0.88) / 0.08));
+      const blur = (1 - depth) * 1.8;
 
-      item.style.setProperty('--rack-x', `${x}px`);
-      item.style.setProperty('--rack-y', `${y}px`);
-      item.style.setProperty('--rack-scale', scale.toFixed(3));
-      item.style.setProperty('--rack-opacity', opacity.toFixed(3));
+      item.style.setProperty('--product-x', `${x}px`);
+      item.style.setProperty('--product-y-pos', `${y}px`);
+      item.style.setProperty('--product-scale', scale.toFixed(3));
+      item.style.setProperty('--product-opacity', opacity.toFixed(3));
       item.style.setProperty('--label-opacity', labelOpacity.toFixed(3));
-      item.style.setProperty('--rack-blur', `${blur.toFixed(2)}px`);
+      item.style.setProperty('--product-blur', `${blur.toFixed(2)}px`);
       item.style.zIndex = String(20 + Math.round(depth * 80));
-      item.dataset.front = depth > 0.92 ? '1' : '0';
-      item.setAttribute('aria-hidden', depth < 0.18 ? 'true' : 'false');
+      item.dataset.front = depth > 0.96 ? '1' : '0';
+      item.setAttribute('aria-hidden', depth < 0.12 ? 'true' : 'false');
     });
   }
 
@@ -177,7 +177,7 @@
       const t = Math.min(1, (now - started) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
       rotation = start + change * eased;
-      renderRack();
+      renderCarousel();
       if (t < 1) animationFrame = requestAnimationFrame(tick);
       else animationFrame = 0;
     };
@@ -210,7 +210,7 @@
     root.style.setProperty('--sf-closet-top', `${m.top}px`);
     root.style.setProperty('--sf-closet-width', `${Math.max(1, m.width)}px`);
     root.style.setProperty('--sf-closet-height', `${Math.max(1, m.height)}px`);
-    renderRack();
+    renderCarousel();
   }
 
   function startTracking() {
@@ -241,7 +241,7 @@
     requestAnimationFrame(() => requestAnimationFrame(() => {
       syncViewport();
       page.classList.add('is-open');
-      renderRack();
+      renderCarousel();
       page.querySelector('.sf-closet-close')?.focus({ preventScroll: true });
     }));
   }
