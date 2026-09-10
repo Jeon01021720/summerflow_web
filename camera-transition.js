@@ -28,7 +28,23 @@
     });
   }
 
-  const backReady = preloadImage(BACK);
+  let backReady = null;
+  function ensureBackReady() {
+    if (!backReady) backReady = preloadImage(BACK);
+    return backReady;
+  }
+
+  function scheduleBackPreload() {
+    const preload = () => { ensureBackReady().catch(() => {}); };
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(preload, { timeout: 3500 });
+    } else {
+      window.setTimeout(preload, 1800);
+    }
+  }
+
+  if (document.readyState === 'complete') scheduleBackPreload();
+  else window.addEventListener('load', scheduleBackPreload, { once: true });
 
   function closeLegacy() {
     const view = document.querySelector('.destination-view');
@@ -158,7 +174,7 @@
     closeLegacy();
 
     try {
-      await backReady;
+      await ensureBackReady();
     } catch (error) {
       console.error('[Summerflow] camera back image failed to decode', error);
       busy = false;
