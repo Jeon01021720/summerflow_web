@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://summerflow.store/sitemap.xml
